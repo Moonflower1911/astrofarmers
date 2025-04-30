@@ -12,8 +12,19 @@ public class IrrigationEvent {
     private LocalDate eventDate;
     private double irrigationAmount;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean done;
+
     @ManyToOne
     private IrrigationSchedule irrigationSchedule;
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public Long getId() {
         return id;

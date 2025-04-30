@@ -1,5 +1,6 @@
 package com.example.service.irrigation;
 
+import com.example.entity.auth.User;
 import com.example.entity.irrigation.*;
 import com.example.model.irrigation.MoistureThreshold;
 import com.example.repository.irrigation.*;
@@ -25,7 +26,7 @@ public class IrrigationSchedulingService {
     private IrrigationEventRepository irrigationEventRepository;
 
     public List<IrrigationSchedule> generateIrrigationSchedule(Long cropTypeId, double latitude, double longitude,
-                                                               LocalDate plantingDate, LocalDate startDate, LocalDate endDate) {
+                                                               LocalDate plantingDate, LocalDate startDate, LocalDate endDate, User user) {
 
         List<IrrigationSchedule> generatedSchedules = new ArrayList<>();
 
@@ -58,7 +59,7 @@ public class IrrigationSchedulingService {
                 double irrigationAmount = calculateIrrigationAmount(forecast, threshold, cropType);
 
                 // Create and save irrigation schedule
-                IrrigationSchedule schedule = createIrrigationSchedule(date, cropType, forecast, irrigationAmount);
+                IrrigationSchedule schedule = createIrrigationSchedule(date, cropType, forecast, irrigationAmount, user);
                 irrigationScheduleRepository.save(schedule);
 
                 // Create irrigation event if needed
@@ -97,12 +98,13 @@ public class IrrigationSchedulingService {
     }
 
     private IrrigationSchedule createIrrigationSchedule(LocalDate date, CropType cropType,
-                                                        WeatherForecast forecast, double amount) {
+                                                        WeatherForecast forecast, double amount, User user) {
         IrrigationSchedule schedule = new IrrigationSchedule();
         schedule.setDate(date);
         schedule.setCropType(cropType);
         schedule.setIrrigationAmount(amount);
         schedule.setWeatherForecast(forecast);
+        schedule.setUser(user);
         return schedule;
     }
 

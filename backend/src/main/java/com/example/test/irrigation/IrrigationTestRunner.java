@@ -4,6 +4,7 @@ package com.example.test.irrigation;
 import com.example.model.irrigation.SoilType;
 import com.example.entity.irrigation.*;
 import com.example.model.irrigation.MoistureThreshold;
+import com.example.repository.auth.UserRepository;
 import com.example.repository.irrigation.*;
 import com.example.service.irrigation.IrrigationSchedulingService;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +21,8 @@ public class IrrigationTestRunner {
     public CommandLineRunner testIrrigationScheduling(
             CropTypeRepository cropTypeRepository,
             WeatherForecastRepository weatherForecastRepository,
-            IrrigationSchedulingService irrigationSchedulingService
+            IrrigationSchedulingService irrigationSchedulingService,
+            UserRepository userRepository
     ) {
         return args -> {
             // 1. Create and save CropTypes with different characteristics
@@ -66,7 +68,9 @@ public class IrrigationTestRunner {
                         lon,
                         plantingDate,
                         today,
-                        endDate
+                        endDate,
+                        userRepository.findByUserId(1L).get()
+
                 );
                 System.out.printf("✅ Irrigation test completed for %s (Soil: %s)%n",
                         crop.getName(), crop.getSoilTypeAdjustment());

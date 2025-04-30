@@ -1,5 +1,6 @@
 package com.example.entity.irrigation;
 
+import com.example.entity.auth.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,18 @@ public class IrrigationSchedule {
 
     @ManyToOne
     private WeatherForecast weatherForecast; // Weather data for the day
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;
