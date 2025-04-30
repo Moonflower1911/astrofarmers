@@ -34,4 +34,6 @@ public class IrrigationController {
 
         return ResponseEntity.ok(schedules);
     }
+
+
 }
