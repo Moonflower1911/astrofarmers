@@ -18,6 +18,16 @@ public class WeatherForecast {
     private double temperature;
     private double humidity;
     private double rainfall;
+    @Column(nullable = true)
+    private double windSpeed;
+
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(double windSpeed) {
+        this.windSpeed = windSpeed;
+    }
 
     public Long getId() {
         return id;

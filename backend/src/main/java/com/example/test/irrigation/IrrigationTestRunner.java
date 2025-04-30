@@ -1,5 +1,7 @@
 package com.example.test.irrigation;
 
+
+import com.example.model.irrigation.SoilType;
 import com.example.entity.irrigation.*;
 import com.example.model.irrigation.MoistureThreshold;
 import com.example.repository.irrigation.*;
@@ -9,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 //@Configuration
@@ -22,58 +23,101 @@ public class IrrigationTestRunner {
             IrrigationSchedulingService irrigationSchedulingService
     ) {
         return args -> {
-            // 1. Create and save a CropType
-            CropType wheat = new CropType();
-            wheat.setName("Wheat");
+            // 1. Create and save CropTypes with different characteristics
+            CropType wheat = createCropType("Wheat", 5.0, 15.0, SoilType.LOAMY);
+            CropType rice = createCropType("Rice", 10.0, 25.0, SoilType.CLAY);
+            CropType corn = createCropType("Corn", 7.0, 20.0, SoilType.SANDY);
 
-            Map<String, Integer> stageDurations = new LinkedHashMap<>();
-            stageDurations.put("Germination", 10);
-            stageDurations.put("Vegetative", 30);
-            stageDurations.put("Reproductive", 20);
-            stageDurations.put("Maturity", 15);
-            wheat.setGrowthStageDurations(stageDurations);
+            cropTypeRepository.saveAll(List.of(wheat, rice, corn));
 
-            Map<String, MoistureThreshold> thresholds = new HashMap<>();
-            thresholds.put("Germination", new MoistureThreshold(30, 60));
-            thresholds.put("Vegetative", new MoistureThreshold(35, 65));
-            thresholds.put("Reproductive", new MoistureThreshold(40, 70));
-            thresholds.put("Maturity", new MoistureThreshold(25, 50));
-            wheat.setMoistureThresholds(thresholds);
-
-            cropTypeRepository.save(wheat);
-
-            // 2. Create and save WeatherForecast data
+            // 2. Create test weather scenarios
             double lat = 34.02;
             double lon = -6.83;
-            LocalDate start = LocalDate.now();
-            LocalDate end = start.plusDays(4);
+            LocalDate today = LocalDate.now();
 
-            for (int i = 0; i <= ChronoUnit.DAYS.between(start, end); i++) {
-                LocalDate date = start.plusDays(i);
-                WeatherForecast forecast = new WeatherForecast();
-                forecast.setDate(date);
-                forecast.setLatitude(lat);
-                forecast.setLongitude(lon);
-                forecast.setSoilMoisture(25.0); // Low moisture to trigger irrigation
-                forecast.setTemperature(32.0);  // Hot → higher need
-                forecast.setHumidity(35.0);     // Dry → higher need
-                forecast.setRainfall(2.0);      // Light rain
+            // Scenario 1: Normal irrigation needed (hot, dry, windy)
+            createWeatherForecast(weatherForecastRepository, lat, lon, today,
+                    32.0, 35.0, 2.0, 18.0, 25.0, "Normal irrigation expected");
 
-                weatherForecastRepository.save(forecast);
+            // Scenario 2: Heavy rain - no irrigation needed
+            createWeatherForecast(weatherForecastRepository, lat, lon, today.plusDays(1),
+                    25.0, 70.0, 15.0, 5.0, 40.0, "No irrigation - heavy rain");
+
+            // Scenario 3: Freezing temperatures - no irrigation
+            createWeatherForecast(weatherForecastRepository, lat, lon, today.plusDays(2),
+                    -2.0, 80.0, 0.0, 10.0, 20.0, "No irrigation - freezing");
+
+            // Scenario 4: High winds increase evaporation
+            createWeatherForecast(weatherForecastRepository, lat, lon, today.plusDays(3),
+                    30.0, 30.0, 0.0, 25.0, 15.0, "Increased irrigation - windy");
+
+            // Scenario 5: Sandy soil needs more water
+            createWeatherForecast(weatherForecastRepository, lat, lon, today.plusDays(4),
+                    28.0, 40.0, 1.0, 12.0, 20.0, "Sandy soil adjustment");
+
+            // 3. Test irrigation for each crop type
+            LocalDate plantingDate = today.minusDays(15);
+            LocalDate endDate = today.plusDays(4);
+
+            for (CropType crop : List.of(wheat, rice, corn)) {
+                irrigationSchedulingService.generateIrrigationSchedule(
+                        crop.getId(),
+                        lat,
+                        lon,
+                        plantingDate,
+                        today,
+                        endDate
+                );
+                System.out.printf("✅ Irrigation test completed for %s (Soil: %s)%n",
+                        crop.getName(), crop.getSoilTypeAdjustment());
             }
-
-            // 3. Trigger schedule generation
-            LocalDate plantingDate = LocalDate.now().minusDays(15);
-            irrigationSchedulingService.generateIrrigationSchedule(
-                    wheat.getId(),
-                    lat,
-                    lon,
-                    plantingDate,
-                    start,
-                    end
-            );
-
-            System.out.println("✅ Test schedule generated for crop: Wheat");
         };
+    }
+
+    private CropType createCropType(String name, double baseWater, double maxWater, SoilType soilType) {
+        CropType crop = new CropType();
+        crop.setName(name);
+        crop.setBaseWaterRequirement(baseWater);
+        crop.setMaxDailyIrrigation(maxWater);
+        crop.setSoilTypeAdjustment(soilType);
+
+        // Standard growth stages
+        Map<String, Integer> stages = new LinkedHashMap<>();
+        stages.put("Germination", 10);
+        stages.put("Vegetative", 30);
+        stages.put("Reproductive", 20);
+        stages.put("Maturity", 15);
+        crop.setGrowthStageDurations(stages);
+
+        // Moisture thresholds
+        Map<String, MoistureThreshold> thresholds = new HashMap<>();
+        thresholds.put("Germination", new MoistureThreshold(30, 60));
+        thresholds.put("Vegetative", new MoistureThreshold(35, 65));
+        thresholds.put("Reproductive", new MoistureThreshold(40, 70));
+        thresholds.put("Maturity", new MoistureThreshold(25, 50));
+        crop.setMoistureThresholds(thresholds);
+
+        return crop;
+    }
+
+    private void createWeatherForecast(WeatherForecastRepository repository,
+                                       double lat, double lon, LocalDate date,
+                                       double temp, double humidity, double rainfall,
+                                       double windSpeed, double soilMoisture,
+                                       String note) {
+        WeatherForecast forecast = new WeatherForecast();
+        forecast.setDate(date);
+        forecast.setLatitude(lat);
+        forecast.setLongitude(lon);
+        forecast.setTemperature(temp);
+        forecast.setHumidity(humidity);
+        forecast.setRainfall(rainfall);
+        forecast.setWindSpeed(windSpeed);
+        forecast.setSoilMoisture(soilMoisture);
+        repository.save(forecast);
+
+        System.out.printf("🌦️ Created weather scenario for %s: %s%n", date, note);
+        System.out.printf("   Temp: %.1f°C | Hum: %.1f%% | Rain: %.1fmm | Wind: %.1fkm/h | Soil: %.1f%%%n",
+                temp, humidity, rainfall, windSpeed, soilMoisture);
     }
 }
