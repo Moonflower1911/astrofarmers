@@ -49,7 +49,7 @@ public class AuthController {
         User user = optionalUser.get();
         String role = user.getRole().getNomRole(); // Either "USER" or "ADMIN"
         String token = JwtUtils.generateToken(user.getEmail(), role);
-        String redirectUrl = "/role/" + role.toLowerCase() + "/" + user.getUserId();
+        String redirectUrl = "/" + role.toLowerCase() + "/" + user.getUserId();
 
         return ResponseEntity.ok(Map.of(
                 "token", token,

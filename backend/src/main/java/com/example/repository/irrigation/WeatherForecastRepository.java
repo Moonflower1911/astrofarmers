@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,5 +25,17 @@ public interface WeatherForecastRepository extends JpaRepository<WeatherForecast
             @Param("lon") double longitude
     );
 
+    @Query("SELECT wf FROM WeatherForecast wf WHERE wf.date = :date AND wf.latitude = :latitude AND wf.longitude = :longitude")
+    Optional<WeatherForecast> findByDateAndLatitudeAndLongitude(LocalDate date, double latitude, double longitude);
+
+
+
+    @Query("SELECT wf FROM WeatherForecast wf WHERE wf.date BETWEEN :startDate AND :endDate AND wf.latitude = :latitude AND wf.longitude = :longitude")
+    List<WeatherForecast> findByDateBetweenAndLatitudeAndLongitude(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("latitude") double latitude,
+            @Param("longitude") double longitude
+    );
 
 }

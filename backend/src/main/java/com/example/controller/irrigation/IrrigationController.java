@@ -2,9 +2,11 @@ package com.example.controller.irrigation;
 
 import com.example.entity.auth.User;
 import com.example.entity.irrigation.IrrigationSchedule;
+import com.example.entity.irrigation.WeatherForecast;
 import com.example.repository.auth.UserRepository;
 import com.example.security.JwtUtils;
 import com.example.service.irrigation.IrrigationSchedulingService;
+import com.example.service.irrigation.WeatherForecastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/role/user/irrigation/")
+@RequestMapping("/api/user/irrigation/")
 public class IrrigationController {
 
     @Autowired
@@ -23,6 +25,7 @@ public class IrrigationController {
 
     @Autowired
     private UserRepository userRepository;
+
 
     @PostMapping("{id}/schedule")
     public ResponseEntity<List<IrrigationSchedule>> generateSchedule(
@@ -51,6 +54,10 @@ public class IrrigationController {
 
         return ResponseEntity.ok(schedules);
     }
+
+
+
+
 
 
 }
