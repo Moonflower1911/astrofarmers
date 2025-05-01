@@ -1,0 +1,65 @@
+{
+    "request": {
+        "headers": {
+            "accept": "image/tiff",
+            "content-type": "application/json"
+        },
+        "payload": {
+            "evalscript": "\n        //VERSION=3\n        function setup() {\n            return {\n                input: [\"B04\"],\n                output: { bands: 1, sampleType: \"UINT16\" }\n            };\n        }\n\n        function evaluatePixel(sample) {\n            return [sample.B04];\n        }\n        ",
+            "input": {
+                "bounds": {
+                    "bbox": [
+                        3.0300000000000002,
+                        36.74,
+                        3.05,
+                        36.76
+                    ],
+                    "properties": {
+                        "crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
+                    }
+                },
+                "data": [
+                    {
+                        "dataFilter": {
+                            "timeRange": {
+                                "from": "2024-04-01T00:00:00Z",
+                                "to": "2024-04-30T23:59:59Z"
+                            }
+                        },
+                        "type": "sentinel-2-l2a"
+                    }
+                ]
+            },
+            "output": {
+                "height": 222,
+                "responses": [
+                    {
+                        "format": {
+                            "type": "image/tiff"
+                        },
+                        "identifier": "default"
+                    }
+                ],
+                "width": 178
+            }
+        },
+        "timestamp": "2025-05-01T15:37:25.398880",
+        "url": "https://services.sentinel-hub.com/api/v1/process"
+    },
+    "response": {
+        "elapsed": 0.744777,
+        "headers": {
+            "Connection": "keep-alive",
+            "Content-Length": "2997",
+            "Content-Type": "image/tiff",
+            "Date": "Thu, 01 May 2025 14:37:23 GMT",
+            "access-control-allow-credentials": "true",
+            "access-control-allow-headers": "origin,content-type,accept,accept-crs,authorization,cache-control",
+            "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
+            "access-control-allow-origin": "*",
+            "access-control-max-age": "3600",
+            "x-processingunits-spent": "0.050247193880295526"
+        },
+        "status_code": 200
+    }
+}
