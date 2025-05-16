@@ -5,6 +5,9 @@ import com.example.repository.irrigation.CropTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.security.JwtUtils;
+import org.springframework.http.HttpStatus;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +25,56 @@ public class CropTypeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CropType> getCropById(@PathVariable Long id) {
+    public ResponseEntity<CropType> getCropById(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authorizationHeader.substring(7);
+        if (JwtUtils.validateToken(token) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         return cropTypeRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public CropType createCrop(@RequestBody CropType cropType) {
-        return cropTypeRepository.save(cropType);
+    public ResponseEntity<?> createCrop(
+            @RequestBody CropType cropType,
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authorizationHeader.substring(7);
+        if (JwtUtils.validateToken(token) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        cropTypeRepository.save(cropType);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Crop Type created successfully!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CropType> updateCrop(@PathVariable Long id, @RequestBody CropType updatedCrop) {
+    public ResponseEntity<CropType> updateCrop(
+            @PathVariable Long id,
+            @RequestBody CropType updatedCrop,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authorizationHeader.substring(7);
+        if (JwtUtils.validateToken(token) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
         Optional<CropType> optionalCrop = cropTypeRepository.findById(id);
         if (optionalCrop.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -52,7 +92,20 @@ public class CropTypeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCrop(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCrop(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authorizationHeader
+            ) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authorizationHeader.substring(7);
+        if (JwtUtils.validateToken(token) == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
         if (!cropTypeRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
