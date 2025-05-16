@@ -11,6 +11,9 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name= "username")
+    private String username;
+
     @Column(length = 100,  unique = true)
     private String email;
 
@@ -49,5 +52,9 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public void setUsername(String username) { this.username = username; }
+
+    public String getUsername() {return username;}
 }
 

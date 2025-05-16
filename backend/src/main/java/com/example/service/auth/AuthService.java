@@ -37,6 +37,7 @@ public class AuthService {
 
         // Create a new user
         User utilisateur = new User();
+        utilisateur.setUsername(utilisateurDTO.getUsername());
         utilisateur.setEmail(utilisateurDTO.getEmail());
         utilisateur.setPassword(hashedPassword);
         utilisateur.setRole(role);

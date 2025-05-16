@@ -2,6 +2,7 @@ package com.example.dto;
 
 public class UserDTO {
     private Long userId;
+    private String username;
     private String email;
     private String password;
     private String role;
@@ -27,13 +28,19 @@ public class UserDTO {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
+    public void setUsername(String username){
+        this.username = username;
+    }
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername(){
+        return username;
     }
 
     public String getPassword() {
