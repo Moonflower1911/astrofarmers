@@ -3,6 +3,8 @@ package com.example.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import com.example.model.auth.User;
+
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
-package com.example.entity.irrigation;
+package com.example.model.irrigation;
 
-import com.example.model.irrigation.MoistureThreshold;
-import com.example.model.irrigation.SoilType;
+import com.example.dto.irrigation.MoistureThreshold;
+import com.example.dto.irrigation.SoilType;
 import jakarta.persistence.*;
 import java.util.Map;
 

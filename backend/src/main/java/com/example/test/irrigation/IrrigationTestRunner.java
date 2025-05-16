@@ -1,15 +1,15 @@
 package com.example.test.irrigation;
 
 
-import com.example.model.irrigation.SoilType;
-import com.example.entity.irrigation.*;
-import com.example.model.irrigation.MoistureThreshold;
+import com.example.dto.irrigation.SoilType;
+import com.example.dto.irrigation.MoistureThreshold;
+import com.example.model.irrigation.CropType;
+import com.example.model.irrigation.WeatherForecast;
 import com.example.repository.auth.UserRepository;
 import com.example.repository.irrigation.*;
 import com.example.service.irrigation.IrrigationSchedulingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.util.*;

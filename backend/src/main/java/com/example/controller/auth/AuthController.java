@@ -3,7 +3,7 @@ package com.example.controller.auth;
 
 import com.example.dto.LoginRequestDTO;
 import com.example.dto.UserDTO;
-import com.example.entity.auth.User;
+import com.example.model.auth.User;
 import com.example.repository.auth.UserRepository;
 import com.example.security.JwtUtils;
 import com.example.security.PasswordUtils;

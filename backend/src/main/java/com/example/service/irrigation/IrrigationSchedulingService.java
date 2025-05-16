@@ -1,8 +1,11 @@
 package com.example.service.irrigation;
 
-import com.example.entity.auth.User;
-import com.example.entity.irrigation.*;
-import com.example.model.irrigation.MoistureThreshold;
+import com.example.model.auth.User;
+import com.example.dto.irrigation.MoistureThreshold;
+import com.example.model.irrigation.CropType;
+import com.example.model.irrigation.IrrigationEvent;
+import com.example.model.irrigation.IrrigationSchedule;
+import com.example.model.irrigation.WeatherForecast;
 import com.example.repository.irrigation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.service.irrigation;
 
-import com.example.model.irrigation.SoilMoistureResponse;
+import com.example.dto.irrigation.SoilMoistureResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;

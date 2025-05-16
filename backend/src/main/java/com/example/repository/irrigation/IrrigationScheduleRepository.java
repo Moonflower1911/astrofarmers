@@ -1,7 +1,7 @@
 package com.example.repository.irrigation;
 
-import com.example.entity.auth.User;
-import com.example.entity.irrigation.IrrigationSchedule;
+import com.example.model.auth.User;
+import com.example.model.irrigation.IrrigationSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

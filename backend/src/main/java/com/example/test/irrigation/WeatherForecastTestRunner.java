@@ -1,9 +1,8 @@
 package com.example.test.irrigation;
 
-import com.example.entity.irrigation.WeatherForecast;
+import com.example.model.irrigation.WeatherForecast;
 import com.example.repository.irrigation.WeatherForecastRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;

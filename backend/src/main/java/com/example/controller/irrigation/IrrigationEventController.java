@@ -1,7 +1,7 @@
 package com.example.controller.irrigation;
 
-import com.example.entity.auth.User;
-import com.example.entity.irrigation.IrrigationEvent;
+import com.example.model.auth.User;
+import com.example.model.irrigation.IrrigationEvent;
 import com.example.repository.auth.UserRepository;
 import com.example.security.JwtUtils;
 import com.example.service.irrigation.IrrigationEventService;

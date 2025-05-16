@@ -1,6 +1,6 @@
-package com.example.entity.irrigation;
+package com.example.model.irrigation;
 
-import com.example.entity.auth.User;
+import com.example.model.auth.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.example.model.irrigation;
+package com.example.dto.irrigation;
 
 import java.util.List;
 import java.util.Map;

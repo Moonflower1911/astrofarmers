@@ -1,7 +1,7 @@
 package com.example.service.irrigation;
 
-import com.example.entity.irrigation.WeatherForecast;
-import com.example.model.irrigation.WeatherApiResponse;
+import com.example.model.irrigation.WeatherForecast;
+import com.example.dto.irrigation.WeatherApiResponse;
 import com.example.repository.irrigation.WeatherForecastRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

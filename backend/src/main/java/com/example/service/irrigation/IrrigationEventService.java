@@ -1,7 +1,7 @@
 package com.example.service.irrigation;
 
-import com.example.entity.auth.User;
-import com.example.entity.irrigation.IrrigationEvent;
+import com.example.model.auth.User;
+import com.example.model.irrigation.IrrigationEvent;
 import com.example.repository.irrigation.IrrigationEventRepository;
 import org.springframework.stereotype.Service;
 

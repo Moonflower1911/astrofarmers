@@ -1,4 +1,4 @@
-package com.example.entity.irrigation;
+package com.example.model.irrigation;
 
 import jakarta.persistence.*;
 

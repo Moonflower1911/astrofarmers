@@ -2,8 +2,8 @@ package com.example.service.auth;
 
 
 import com.example.dto.UserDTO;
-import com.example.entity.auth.Role;
-import com.example.entity.auth.User;
+import com.example.model.auth.Role;
+import com.example.model.auth.User;
 import com.example.repository.auth.RoleRepository;
 import com.example.repository.auth.UserRepository;
 import com.example.security.PasswordUtils;

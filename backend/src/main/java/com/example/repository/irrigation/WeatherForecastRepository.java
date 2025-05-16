@@ -1,7 +1,6 @@
 package com.example.repository.irrigation;
 
-import com.example.entity.irrigation.CropType;
-import com.example.entity.irrigation.WeatherForecast;
+import com.example.model.irrigation.WeatherForecast;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,12 +1,11 @@
 package com.example.controller.irrigation;
 
-import com.example.entity.irrigation.WeatherForecast;
-import com.example.model.irrigation.SoilMoistureResponse;
+import com.example.model.irrigation.WeatherForecast;
+import com.example.dto.irrigation.SoilMoistureResponse;
 import com.example.service.irrigation.SoilMoistureService;
 import com.example.service.irrigation.WeatherForecastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;

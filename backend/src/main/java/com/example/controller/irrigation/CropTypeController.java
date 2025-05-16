@@ -1,6 +1,6 @@
 package com.example.controller.irrigation;
 
-import com.example.entity.irrigation.CropType;
+import com.example.model.irrigation.CropType;
 import com.example.repository.irrigation.CropTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
