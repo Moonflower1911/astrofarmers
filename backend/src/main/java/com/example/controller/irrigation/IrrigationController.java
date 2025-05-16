@@ -2,11 +2,9 @@ package com.example.controller.irrigation;
 
 import com.example.entity.auth.User;
 import com.example.entity.irrigation.IrrigationSchedule;
-import com.example.entity.irrigation.WeatherForecast;
 import com.example.repository.auth.UserRepository;
 import com.example.security.JwtUtils;
 import com.example.service.irrigation.IrrigationSchedulingService;
-import com.example.service.irrigation.WeatherForecastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
