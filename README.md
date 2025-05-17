@@ -131,9 +131,16 @@ If your project uses Python scripts for ML processing:
 ### 🌾 Landing page
 
 ![Dashboard Screenshot](images/1.png)
+*Home Page.*
+---
 ![Dashboard Screenshot](images/2.png)
+*Features Sum Up.*
+---
 ![Dashboard Screenshot](images/3.png)
+*Contact Us.*
+---
 ![Dashboard Screenshot](images/4.png)
+*Footer.*
 ---
 ### SignUp
 ![SignUp Screenshot](images/5.png)
@@ -143,53 +150,84 @@ If your project uses Python scripts for ML processing:
 
 ---
 ### 🔔 Weather and Alerts
-![SignUp Screenshot](images/7.png)
-![SignUp Screenshot](images/8.png)
-
+![weather Screenshot](images/7.png)
+*Weather Forecast.*
+---
+![weather Screenshot](images/8.png)
+*Historical Data.*
 ---
 
 
 ### 🚀 Satellite Imagery View
 
 ![Satellite View](images/9.png)
+*Location Selection.*
+---
 ![Satellite View](images/10.png)
+*NDVI Analysis Result.*
+---
 ![Satellite View](images/11.png)
+*NDVI Analysis Result 2.*
 
-*NDVI-based crop health monitoring from Sentinel-2.*
 
 ---
 ### 📊 Soil Info
+![Soil Info View](images/30.png)
+*Soil Moisture Details.*
+---
 ![Soil Info View](images/12.png)
+*General Weather Info.*
+---
 ![Soil Info View](images/13.png)
+*General Weather Info 2.*
+---
 ![Soil Info View](images/14.png)
+*General Weather Info 3.*
+
 
 
 ---
 ### 🌾 Irrigation Schedule
 ![Soil Info View](images/15.png)
+*Irrigation Schedule Generation.*
+---
 ![Soil Info View](images/16.png)
-
-### Notifications Irrigation
+*Irrigation Events.*
+---
 ![Soil Info View](images/20.png)
+*Notifications Irrigation.*
 
 
 --- 
 ### 🌾 Land
 ![Soil Info View](images/17.png)
+*Add Land.*
+---
 ![Soil Info View](images/18.png)
+*See Lands.*
+
 
 ---
 
 ### Profile
 
 ![Analytics](images/19.png)
+*Change Username.*
+
 
 ---
 
 ## Admin 
 ![Analytics](images/24.png)
+*Crop Management.*
+---
 ![Analytics](images/25.png)
+*Edit Existing CropType.*
+---
 ![Analytics](images/26.png)
+*Add CropType.*
+
+---
 
 ## 📁 Project Structure (Example)
 
