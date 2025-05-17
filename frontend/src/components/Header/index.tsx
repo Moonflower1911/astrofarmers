@@ -69,9 +69,9 @@ const Header = (props: {
         <div className="hidden xl:block">
           <div>
             <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
-              Dashboard
+              Hello Astro Farmer!
             </h1>
-            <p className="font-medium">Agri Solution</p>
+            <p className="font-medium">Here You can Find All You Need For Your Farming</p>
           </div>
         </div>
 

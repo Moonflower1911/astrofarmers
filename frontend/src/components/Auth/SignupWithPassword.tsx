@@ -52,6 +52,15 @@ export default function SignupWithPassword() {
     <form onSubmit={handleSubmit}>
 
       <div className="mb-4">
+        <div className="mb-4.5">
+          <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="flex items-center justify-center gap-2 w-1/3 px-6 py-3 rounded-lg font-satoshi text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-white dark:text-blue-600 dark:hover:bg-white/90 transition-all duration-200 shadow-md"
+          >
+            Go Home
+          </button>
+        </div>
         <label
           htmlFor="lastname"
           className="mb-2.5 block font-medium text-dark dark:text-white"

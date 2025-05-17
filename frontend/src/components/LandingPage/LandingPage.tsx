@@ -13,7 +13,7 @@ export default function LandingPage() {
         <div className="landing-root">
             {/* 🌿 Navbar */}
             <nav className="navbar">
-                <div className="logo">AgriSpace</div>
+                <div className="logo">AstroFarmers</div>
                 <ul className="nav-links">
                     <li><a href="#about">About</a></li>
                     <li><a href="#features">Features</a></li>
@@ -49,7 +49,7 @@ export default function LandingPage() {
             {/* 📫 Contact Section */}
             <section id="contact" className="contact-section">
                 <h2>Contact Us</h2>
-                <p>Email: contact@agrispace.io</p>
+                <p>Email: contact@astrofarmers.io</p>
                 <p>Phone: +212 6 00 00 00 00</p>
             </section>
         </div>

@@ -236,7 +236,7 @@ const SchedulesPage = () => {
                             </label>
                             <select
                                 id="land"
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border--500 focus:ring-green-500 sm:text-sm"
                                 value={selectedLand?.id || ''}
                                 onChange={(e) => {
                                     const land = lands.find(l => l.id.toString() === e.target.value);
@@ -280,7 +280,7 @@ const SchedulesPage = () => {
                                 </label>
                                 <select
                                     id="cropType"
-                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                     value={selectedCropType || ''}
                                     onChange={(e) => setSelectedCropType(Number(e.target.value))}
                                     required
@@ -300,7 +300,7 @@ const SchedulesPage = () => {
                                 <input
                                     type="date"
                                     id="plantingDate"
-                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                     value={plantingDate}
                                     onChange={(e) => setPlantingDate(e.target.value)}
                                     required
@@ -315,7 +315,7 @@ const SchedulesPage = () => {
                                 <input
                                     type="date"
                                     id="startDate"
-                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
                                     required
@@ -328,7 +328,7 @@ const SchedulesPage = () => {
                                 <input
                                     type="date"
                                     id="endDate"
-                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                     value={endDate}
                                     onChange={(e) => setEndDate(e.target.value)}
                                     min={startDate}
@@ -339,7 +339,7 @@ const SchedulesPage = () => {
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                 disabled={loading || !selectedLand || !selectedCropType || !plantingDate || !startDate || !endDate}
                             >
                                 {loading ? 'Generating...' : 'Generate Schedule'}
@@ -351,7 +351,7 @@ const SchedulesPage = () => {
                 {/* Schedules List */}
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                     </div>
                 ) : schedules.length > 0 ? (
                     <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
@@ -434,7 +434,7 @@ const SchedulesPage = () => {
                                 <label htmlFor="filter" className="sr-only">Filter</label>
                                 <select
                                     id="filter"
-                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                     value={filterDone}
                                     onChange={(e) => {
                                         setFilterDone(e.target.value as 'all' | 'done' | 'pending');
@@ -485,7 +485,7 @@ const SchedulesPage = () => {
                                             {!event.done && (
                                                 <button
                                                     onClick={() => markEventAsDone(event.id)}
-                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                    className="text-green-600 hover:text-green-900"
                                                     disabled={loading}
                                                 >
                                                     Mark as Done
@@ -530,7 +530,7 @@ const SchedulesPage = () => {
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === page ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`}
+                                                className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === page ? 'z-10 bg-green-50 border-green-500 text-green-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}`}
                                             >
                                                 {page}
                                             </button>
