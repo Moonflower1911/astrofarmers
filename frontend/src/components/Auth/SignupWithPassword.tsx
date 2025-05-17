@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 
 //here the authentication
 
-export default function SigninWithPassword() {
+export default function SignupWithPassword() {
+  const [lastname, setLastname] = useState("");
+  const [firstname, setFirstname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -13,12 +15,17 @@ export default function SigninWithPassword() {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          last_name: lastname,
+          first_name: firstname,
+        }),
       });
 
       const data = await response.json();
@@ -31,7 +38,7 @@ export default function SigninWithPassword() {
         localStorage.setItem("id", data.id);
         router.push(data.redirectUrl);
       } else {
-        console.error("Login failed:", data.error);
+        console.error("Registration failed:", data.error);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -44,6 +51,86 @@ export default function SigninWithPassword() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+        <label
+          htmlFor="firstname"
+          className="mb-2.5 block font-medium text-dark dark:text-white"
+        >
+          Firstname
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Enter your FirstName"
+            name="firstname"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+            className="w-full rounded-lg border border-stroke bg-transparent py-[15px] pl-6 pr-11 font-medium text-dark outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
+          />
+
+          <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
+            <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
+              <svg
+                className="fill-current"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                  fill=""
+                />
+                <path
+                  d="M4 20C4 16.6863 7.13401 14 11 14H13C16.866 14 20 16.6863 20 20V21H4V20Z"
+                  fill=""
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
+      <div className="mb-4">
+        <label
+          htmlFor="lastname"
+          className="mb-2.5 block font-medium text-dark dark:text-white"
+        >
+          Lastname
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Enter your LastName"
+            name="lastname"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            className="w-full rounded-lg border border-stroke bg-transparent py-[15px] pl-6 pr-11 font-medium text-dark outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
+          />
+
+          <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
+            <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
+              <svg
+                className="fill-current"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                  fill=""
+                />
+                <path
+                  d="M4 20C4 16.6863 7.13401 14 11 14H13C16.866 14 20 16.6863 20 20V21H4V20Z"
+                  fill=""
+                />
+              </svg>
+            </span>
+          </span>
+        </div>
+      </div>
       <div className="mb-4">
         <label
           htmlFor="email"
@@ -172,7 +259,7 @@ export default function SigninWithPassword() {
           type="submit"
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
         >
-          Sign In
+          Sign Up
         </button>
       </div>
     </form>
