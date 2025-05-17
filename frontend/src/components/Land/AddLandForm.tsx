@@ -69,47 +69,24 @@ export default function AddLandForm() {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center", // ⬅️ vertically center
-                minHeight: "100vh",
-                backgroundColor: "#f0f0f0", // optional: light background
-                padding: "2rem",
-            }}
-        >
-            <div
-                style={{
-                    maxWidth: "700px",
-                    width: "100%",
-                    backgroundColor: "#fff",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
-                    padding: "2rem",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.5rem",
-                }}
-            >
-                <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>🌾 Add Land</h2>
+        <div className="flex justify-center items-center mb-8 px-4">
+            <div className="w-full max-w-[700px] bg-white dark:bg-gray-dark rounded-lg shadow-lg p-8 sm:p-12 flex flex-col gap-6">
+                <h2 className="text-2xl font-bold text-center text-dark dark:text-white">🌾 Add Land</h2>
 
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    <label style={{ fontWeight: "bold" }}>Land Name</label>
-                    <input
-                        type="text"
-                        placeholder="e.g. Olive Farm"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                        style={{
-                            padding: "0.75rem",
-                            borderRadius: "5px",
-                            border: "1px solid #ccc",
-                        }}
-                    />
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <div>
+                        <label className="block font-semibold text-dark dark:text-white mb-2">Land Name</label>
+                        <input
+                            type="text"
+                            placeholder="e.g. Olive Farm"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="w-full rounded-md border border-stroke dark:border-dark-3 bg-transparent dark:bg-dark-2 px-4 py-3 text-dark dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-primary focus:outline-none"
+                        />
+                    </div>
 
-                    <div style={{ fontSize: "0.95rem", color: "#333" }}>
+                    <div className="text-sm text-dark dark:text-white">
                         📍 Location:
                         <br />
                         Latitude: <strong>{coords?.lat ?? "--"}</strong>, Longitude: <strong>{coords?.lng ?? "--"}</strong>
@@ -117,28 +94,24 @@ export default function AddLandForm() {
 
                     <button
                         type="submit"
-                        style={{
-                            padding: "0.75rem",
-                            border: "none",
-                            borderRadius: "5px",
-                            backgroundColor: "#4CAF50",
-                            color: "#fff",
-                            fontWeight: "bold",
-                            cursor: "pointer",
-                        }}
+                        className="w-full rounded-md bg-green-600 text-white font-semibold py-3 hover:bg-green-700 transition"
                     >
                         Add Land
                     </button>
 
                     {message && (
-                        <p style={{ marginTop: "0.5rem", fontWeight: "bold", color: message.startsWith("✅") ? "green" : "red" }}>
+                        <p className={`text-center font-semibold ${message.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>
                             {message}
                         </p>
                     )}
                 </form>
 
-                <div style={{ height: "400px", borderRadius: "8px", overflow: "hidden" }}>
-                    <MapContainer center={[33.57, -7.58] as [number, number]} zoom={6} style={{ height: "100%", width: "100%" }}>
+                <div className="h-[400px] w-full rounded-lg overflow-hidden">
+                    <MapContainer
+                        center={[33.57, -7.58] as [number, number]}
+                        zoom={6}
+                        className="h-full w-full"
+                    >
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                         <LocationPicker />
                     </MapContainer>
@@ -146,5 +119,6 @@ export default function AddLandForm() {
             </div>
         </div>
     );
+
 
 }

@@ -389,7 +389,7 @@ const IrrigationPage = () => {
                                     </label>
                                     <select
                                         id="forecastDays"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                         value={forecastDays}
                                         onChange={(e) => {
                                             setForecastDays(Number(e.target.value));
@@ -413,7 +413,7 @@ const IrrigationPage = () => {
                                         <input
                                             type="date"
                                             id="startDate"
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                             value={startDate}
                                             onChange={(e) => {
                                                 setStartDate(e.target.value);
@@ -430,7 +430,7 @@ const IrrigationPage = () => {
                                         <input
                                             type="date"
                                             id="endDate"
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                             value={endDate}
                                             onChange={(e) => {
                                                 setEndDate(e.target.value);
@@ -452,7 +452,7 @@ const IrrigationPage = () => {
                                     <input
                                         type="date"
                                         id="specificDate"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                         value={specificDate}
                                         onChange={(e) => {
                                             setSpecificDate(e.target.value);
@@ -471,7 +471,7 @@ const IrrigationPage = () => {
                                         <input
                                             type="date"
                                             id="startDate"
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                             value={startDate}
                                             onChange={(e) => {
                                                 setStartDate(e.target.value);
@@ -488,7 +488,7 @@ const IrrigationPage = () => {
                                         <input
                                             type="date"
                                             id="endDate"
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                                             value={endDate}
                                             onChange={(e) => {
                                                 setEndDate(e.target.value);
@@ -505,7 +505,7 @@ const IrrigationPage = () => {
                         <div className="flex space-x-2">
                             <button
                                 type="submit"
-                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                 disabled={activeTab === 'general' && !specificDate && !(startDate && endDate)}
                             >
                                 Apply Filters
@@ -513,7 +513,7 @@ const IrrigationPage = () => {
                             <button
                                 type="button"
                                 onClick={resetDateFilters}
-                                className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                             >
                                 Reset
                             </button>
@@ -523,7 +523,7 @@ const IrrigationPage = () => {
 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                     </div>
                 ) : (
                     <>
