@@ -1,84 +1,66 @@
 'use client';
 
+import './LandingStyles.css';
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function LandingPage() {
+    useEffect(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+    }, []);
+
     return (
-        <div style={{ fontFamily: 'Arial, sans-serif', color: '#fff' }}>
-            {/* Hero section */}
-            <div style={{
-                background: 'linear-gradient(to bottom, #0f172a, #14532d)',
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '2rem',
-                textAlign: 'center',
-            }}>
-                <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>
-                    🌍🚀 Space-Based Farm Monitoring
-                </h1>
-                <p style={{ fontSize: '1.25rem', maxWidth: '600px', marginBottom: '2rem' }}>
-                    Harness the power of satellite data to monitor crops, predict yields, and protect your farm — all from orbit.
-                </p>
-
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <Link href="/auth/signup">
-                        <button style={buttonStyle}>Sign Up</button>
-                    </Link>
-                    <Link href="/auth/signin">
-                        <button style={{ ...buttonStyle, backgroundColor: '#15803d' }}>Log In</button>
-                    </Link>
+        <div className="landing-root">
+            {/* 🌿 Navbar */}
+            <nav className="navbar">
+                <div className="logo">AgriSpace</div>
+                <ul className="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#contact" className="cta-btn">Contact Us</a></li>
+                </ul>
+                <div className="auth-buttons">
+                    <Link href="/auth/signup"><button className="nav-auth-btn">Sign Up</button></Link>
+                    <Link href="/auth/signin"><button className="nav-auth-btn secondary">Log In</button></Link>
                 </div>
+            </nav>
 
-            </div>
-
-            {/* Features */}
-            <div style={{
-                backgroundColor: '#f8fafc',
-                color: '#1e293b',
-                padding: '4rem 2rem',
-                textAlign: 'center'
-            }}>
-                <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>What You Can Do</h2>
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                    gap: '2rem',
-                    maxWidth: '1000px',
-                    margin: '0 auto',
-                }}>
-                    <FeatureCard title="📡 Real-Time Weather" desc="Access satellite-based weather forecasts and alerts." />
-                    <FeatureCard title="🛰️ Crop Health Monitoring" desc="Use NDVI data to track crop vitality." />
-                    <FeatureCard title="🌱 Soil Moisture Insights" desc="Estimate field moisture levels using space-based sensors." />
-                    <FeatureCard title="📊 Smart Predictions" desc="Use AI-powered yield predictions and farming advice." />
+            {/* 🚀 Hero Section */}
+            <section className="hero" id="about">
+                <div className="hero-overlay" />
+                <div className="hero-content">
+                    <h1>We partner with you in the digitalization of agriculture</h1>
+                    <p>Digital transformation of your farming operations is a real necessity to stay relevant</p>
+                    <a href="#contact" className="hero-button">Contact Us</a>
                 </div>
-            </div>
+            </section>
+
+            {/* 🌟 Features Section */}
+            <section id="features" className="features-section">
+                <h2>Platform Features</h2>
+                <div className="features-grid">
+                    <FeatureCard title="📡 Real-Time Weather" desc="Get accurate forecasts from satellites." />
+                    <FeatureCard title="🛰️ Crop Monitoring" desc="Track crop health with NDVI and imagery." />
+                    <FeatureCard title="🌱 Soil Moisture" desc="Analyze field hydration from orbit." />
+                    <FeatureCard title="📊 Smart AI Insights" desc="Predict yields and receive farming advice." />
+                </div>
+            </section>
+
+            {/* 📫 Contact Section */}
+            <section id="contact" className="contact-section">
+                <h2>Contact Us</h2>
+                <p>Email: contact@agrispace.io</p>
+                <p>Phone: +212 6 00 00 00 00</p>
+            </section>
         </div>
     );
 }
 
 function FeatureCard({ title, desc }: { title: string, desc: string }) {
     return (
-        <div style={{
-            backgroundColor: '#ffffff',
-            padding: '1.5rem',
-            borderRadius: '10px',
-            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-        }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{title}</h3>
-            <p style={{ fontSize: '1rem' }}>{desc}</p>
+        <div className="feature-card">
+            <h3>{title}</h3>
+            <p>{desc}</p>
         </div>
     );
 }
-
-const buttonStyle = {
-    backgroundColor: '#2563eb',
-    color: '#fff',
-    padding: '0.75rem 1.5rem',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    border: 'none',
-    cursor: 'pointer',
-};
