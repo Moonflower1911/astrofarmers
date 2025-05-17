@@ -19,21 +19,19 @@ public class NdviController {
             double lat = convertToDouble(payload.get("latitude"));
             double lon = convertToDouble(payload.get("longitude"));
 
-            // 2. Construction MANUELLE du JSON valide
-            String coordsJson = buildJson(lat, lon);
-            System.out.println("JSON envoyé à Python: " + coordsJson); // Log de vérification
-
-            // 3. Téléchargement des bandes
+            // 2. Exécution du script de téléchargement NDVI
             String downloadOutput = executePythonScript(
-                    "download_bands.py",
-                    coordsJson
+                    "download_ndvi.py",
+                    String.format(Locale.US, "%f %f", lon, lat)
             );
 
-            // 4. Calcul NDVI
-            String ndviArgs = buildNdviArgs();
-            String ndviOutput = executePythonScript("ndvi_processor.py", ndviArgs);
+            // 3. Calcul et génération de la carte NDVI
+            String calculateOutput = executePythonScript("calculate.py", "");
 
-            return ResponseEntity.ok(ndviOutput);
+            // 4. Lecture des résultats
+            String result = parsePythonOutput(calculateOutput);
+
+            return ResponseEntity.ok(result);
 
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
@@ -46,35 +44,45 @@ public class NdviController {
         return Double.parseDouble(value.toString().replace(',', '.'));
     }
 
-    private String buildJson(double lat, double lon) {
-        // Formatage manuel avec guillemets doubles échappés
-        return String.format(Locale.US, "\"{\\\"lat\\\":%.6f,\\\"lon\\\":%.6f}\"", lat, lon);
-    }
+    private String parsePythonOutput(String output) {
+        // Extraire les informations pertinentes de la sortie Python
+        String stats = "";
+        String interpretation = "";
+        String imagePath = "";
 
-    private String buildNdviArgs() {
-        return String.format(
-                "\"{\\\"red_path\\\":\\\"%s\\\",\\\"nir_path\\\":\\\"%s\\\",\\\"output_path\\\":\\\"%s\\\"}\"",
-                BASE_DIR + "script_python/uploads/B04/response.tiff",
-                BASE_DIR + "script_python/uploads/B08/response.tiff",
-                BASE_DIR + "script_python/output/ndvi_map.png"
-        );
+        for (String line : output.split("\n")) {
+            if (line.startsWith("NDVI stats")) {
+                stats = line.substring(line.indexOf("—") + 1).trim();
+            } else if (line.startsWith("Interpretation")) {
+                interpretation = line.substring(line.indexOf(":") + 1).trim();
+            } else if (line.startsWith("Image NDVI")) {
+                imagePath = line.substring(line.indexOf(":") + 1).trim();
+            }
+        }
+
+        return String.format("{\"stats\":\"%s\",\"interpretation\":\"%s\",\"imagePath\":\"%s\"}",
+                stats, interpretation, imagePath);
     }
 
     private String executePythonScript(String scriptName, String args) throws Exception {
-        Process process = new ProcessBuilder(
+        ProcessBuilder pb = new ProcessBuilder(
                 PYTHON_EXE,
-                BASE_DIR + "script_python/" + scriptName,
-                args
-        )
-                .directory(new File(BASE_DIR))
-                .redirectErrorStream(true)
-                .start();
+                BASE_DIR + "script_python/" + scriptName
+        );
 
+        if (!args.isEmpty()) {
+            pb.command().addAll(Arrays.asList(args.split(" ")));
+        }
+
+        pb.directory(new File(BASE_DIR + "script_python/"));
+        pb.redirectErrorStream(true);
+
+        Process process = pb.start();
         String output = new String(process.getInputStream().readAllBytes());
         int exitCode = process.waitFor();
 
         if (exitCode != 0) {
-            throw new RuntimeException(output);
+            throw new RuntimeException("Script Python échoué: " + output);
         }
         return output;
     }
