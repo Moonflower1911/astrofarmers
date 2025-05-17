@@ -14,14 +14,25 @@ def main():
         params = json.loads(input_str)
 
         # 2. Configuration
-        config = SHConfig()
-        config.sh_client_id = '617f78c3-2713-4f5a-8f0f-f7bcd3296815'
-        config.sh_client_secret = 'W6GDcPmDdFyu8EFTwS2NNg38aTU2mjVK'
+#         config = SHConfig()
+#         config.sh_client_id = '617f78c3-2713-4f5a-8f0f-f7bcd3296815'
+#         config.sh_client_secret = 'W6GDcPmDdFyu8EFTwS2NNg38aTU2mjVK'
 
-        # 3. Prepare directories
+
+
+
+        config = SHConfig()
+        config.sh_client_id = '4b918477-f2ac-42ce-91bc-4ff58f396e18'
+        config.sh_client_secret = 'PK0D97docY0jrYeOuBdJ2k0c5FGSKsBu'
+
+        # 3. Prepare and clean directories
         base_dir = "uploads"
-        os.makedirs(f"{base_dir}/B04", exist_ok=True)
-        os.makedirs(f"{base_dir}/B08", exist_ok=True)
+
+        # Nettoyage complet des dossiers avant téléchargement
+        for band in ['B04', 'B08']:
+            band_dir = os.path.join(base_dir, band)
+            shutil.rmtree(band_dir, ignore_errors=True)  # Supprime le dossier et son contenu
+            os.makedirs(band_dir, exist_ok=True)  # Recrée le dossier vide
 
         # 4. Create bounding box (1km x 1km)
         bbox = BBox([
@@ -51,8 +62,8 @@ def main():
                 input_data=[
                     SentinelHubRequest.input_data(
                         data_collection=DataCollection.SENTINEL2_L2A,
-                        time_interval=("2024-01-01", "2024-06-30"),
-                        maxcc=0.3
+                        time_interval=("2024-01-01", "2024-04-30"),
+                        maxcc=0.8
                     )
                 ],
                 responses=[
@@ -61,12 +72,12 @@ def main():
                 bbox=bbox,
                 size=[512, 512],
                 config=config,
-                data_folder=os.path.abspath(f"{base_dir}/{band}")  # Save directly to target folder
+                data_folder=os.path.abspath(f"{base_dir}/{band}")
             ).get_data(save_data=True)
 
         print(json.dumps({
             "status": "success",
-            "message": "Téléchargement réussi",
+            "message": "Téléchargement réussi (anciens fichiers écrasés)",
             "fichiers": {
                 "B04": os.path.abspath(f"{base_dir}/B04/response.tiff"),
                 "B08": os.path.abspath(f"{base_dir}/B08/response.tiff")

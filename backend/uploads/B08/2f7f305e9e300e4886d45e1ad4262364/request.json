@@ -9,10 +9,10 @@
             "input": {
                 "bounds": {
                     "bbox": [
-                        2.3438000000000003,
-                        48.8484,
-                        2.3538,
-                        48.8584
+                        50.335,
+                        50.845,
+                        50.345000000000006,
+                        50.855000000000004
                     ],
                     "properties": {
                         "crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
@@ -21,10 +21,10 @@
                 "data": [
                     {
                         "dataFilter": {
-                            "maxCloudCoverage": 30,
+                            "maxCloudCoverage": 80,
                             "timeRange": {
                                 "from": "2024-01-01T00:00:00Z",
-                                "to": "2024-06-30T23:59:59Z"
+                                "to": "2024-04-30T23:59:59Z"
                             }
                         },
                         "type": "sentinel-2-l2a"
@@ -44,16 +44,16 @@
                 "width": 512
             }
         },
-        "timestamp": "2025-05-01T21:08:52.086001",
+        "timestamp": "2025-05-17T03:56:36.875666",
         "url": "https://services.sentinel-hub.com/api/v1/process"
     },
     "response": {
-        "elapsed": 1.32021,
+        "elapsed": 0.820892,
         "headers": {
             "Connection": "keep-alive",
-            "Content-Length": "5300",
+            "Content-Length": "2875",
             "Content-Type": "image/tiff",
-            "Date": "Thu, 01 May 2025 20:08:50 GMT",
+            "Date": "Sat, 17 May 2025 02:56:35 GMT",
             "access-control-allow-credentials": "true",
             "access-control-allow-headers": "origin,content-type,accept,accept-crs,authorization,cache-control",
             "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH",
