@@ -9,10 +9,10 @@
             "input": {
                 "bounds": {
                     "bbox": [
-                        5.1115390000000005,
-                        45.622243999999995,
-                        5.121539,
-                        45.632244
+                        -11.224989,
+                        27.561721000000002,
+                        -11.214989,
+                        27.571721
                     ],
                     "properties": {
                         "crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
@@ -23,8 +23,8 @@
                         "dataFilter": {
                             "maxCloudCoverage": 30,
                             "timeRange": {
-                                "from": "2025-01-01T00:00:00Z",
-                                "to": "2025-03-30T23:59:59Z"
+                                "from": "2025-05-01T00:00:00Z",
+                                "to": "2025-05-17T23:59:59Z"
                             }
                         },
                         "type": "sentinel-2-l2a"
@@ -44,15 +44,15 @@
                 "width": 512
             }
         },
-        "timestamp": "2025-05-17T10:54:41.247614",
+        "timestamp": "2025-05-17T18:39:51.169546",
         "url": "https://services.sentinel-hub.com/api/v1/process"
     },
     "response": {
-        "elapsed": 0.682847,
+        "elapsed": 0.763344,
         "headers": {
             "Connection": "keep-alive",
             "Content-Type": "image/tiff",
-            "Date": "Sat, 17 May 2025 09:54:41 GMT",
+            "Date": "Sat, 17 May 2025 17:39:09 GMT",
             "Transfer-Encoding": "chunked",
             "access-control-allow-credentials": "true",
             "access-control-allow-headers": "origin,content-type,accept,accept-crs,authorization,cache-control",
