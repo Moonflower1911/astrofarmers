@@ -47,7 +47,6 @@ export default function AddLandPage() {
                     <AddLandForm />
                 ) : (
                     <div style={{ textAlign: "center", marginTop: "2rem", fontSize: "1.2rem" }}>
-                        <p>🌱 List of lands will go here.</p>
                         <LandList />
                     </div>
                 )}
