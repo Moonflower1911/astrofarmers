@@ -2,15 +2,18 @@
 
 ## 🌐 Project Overview
 
-The Space-Based Agricultural Monitoring & Prediction System is a web-based platform designed to enhance agricultural efficiency on Earth by leveraging satellite weather data, machine learning, and remote sensing technologies. This system provides real-time insights to farmers, researchers, and agricultural organizations to optimize crop management and mitigate risks related to climate change.
-
+AstroFarmers is a web-based platform designed to support agricultural monitoring by visualizing satellite-derived weather data, crop health indicators (like NDVI), and soil moisture information. The system empowers farmers, researchers, and agricultural professionals by offering a clear, accessible view of environmental and agronomic conditions using remote sensing technologies.
 ---
 
 ## 🎯 Objectives
 
-* Optimize farming practices by integrating satellite data and AI-driven analytics.
-* Enhance climate resilience by predicting and mitigating environmental risks.
-* Provide research tools for agricultural scientists through open APIs and data visualization.
+* Enable farmers to monitor crop health using NDVI imagery and satellite observations.
+
+* Facilitate better water management through satellite-based soil moisture data.
+
+* Improve agricultural risk awareness via real-time alerts for extreme weather events.
+
+* Provide an accessible platform for data visualization in agricultural monitoring.
 
 ---
 
@@ -248,7 +251,6 @@ If your project uses Python scripts for ML processing:
 
 ## ✅ Conclusion
 
-The **Space-Based Agricultural Monitoring & Prediction System** harnesses satellite data, machine learning, and remote sensing to empower stakeholders in agriculture. It helps improve productivity, optimize resources, and proactively manage climate-related challenges.
-
+**AstroFarmers** leverages satellite data and remote sensing to deliver practical insights for the agricultural sector. By focusing on visualization, the platform simplifies access to essential information such as crop conditions, irrigation schedules, and environmental alerts—helping users make informed decisions and manage their land more effectively.
 ---
 
