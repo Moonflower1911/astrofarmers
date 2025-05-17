@@ -34,19 +34,32 @@ def sauver_image_ndvi_carte(ndvi, chemin_png):
 
 def interpret_ndvi(mean_ndvi):
     if mean_ndvi is None or np.isnan(mean_ndvi):
-        return "Données non disponibles (image probablement nuageuse ou invalide)"
+        return "No usable data detected. This could be due to cloud coverage or image acquisition issues. Tip: Try selecting a different date or checking the weather conditions."
+
     if mean_ndvi < 0:
-        return "Zone d'eau ou de nuages"
+        return ("NDVI suggests water presence or thick cloud cover. "
+                "Tip: This area may be flooded or cloud-obscured. Consider checking field drainage or waiting for a clearer satellite pass.")
+
     elif mean_ndvi < 0.1:
-        return "Sol nu ou très peu de végétation"
+        return ("Very low vegetation detected: mostly bare soil or recently plowed fields. "
+                "Tip: If this is unintended, consider soil preparation or seeding strategies. Monitor irrigation and early crop emergence.")
+
     elif mean_ndvi < 0.2:
-        return "Végétation très faible"
+        return ("Sparse vegetation: possibly early-stage growth, poor germination, or stressed crops. "
+                "Tip: Evaluate seed quality, nutrient application, and irrigation adequacy. Watch for pests or soil compaction issues.")
+
     elif mean_ndvi < 0.5:
-        return "Végétation modérée"
+        return ("Moderate vegetation cover: crops are growing but may not be at optimal health. "
+                "Tip: Check for uneven growth, nutrient deficiencies, or localized stress. Consider applying foliar fertilizers or adjusting irrigation.")
+
     elif mean_ndvi < 0.8:
-        return "Bonne santé de la végétation"
+        return ("Healthy vegetation: crops are developing well and biomass is increasing. "
+                "Tip: Continue monitoring regularly to detect any early signs of disease or stress. Maintain current agronomic practices.")
+
     else:
-        return "Végétation très dense (forêt ou culture optimale)"
+        return ("Very dense vegetation detected: likely full canopy coverage from mature crops or forested areas. "
+                "Tip: If this is your field, it indicates excellent vegetative growth. Plan for harvest timing, yield estimation, and post-harvest logistics.")
+
 
 def find_response_file(base_path):
     base_path = Path(base_path)
@@ -63,6 +76,17 @@ def find_response_file(base_path):
                 return tiff_path
 
     raise FileNotFoundError(f"Aucun fichier response.tiff trouvé dans {base_path}")
+
+
+def extraire_valeurs_ndvi(ndvi):
+    valeurs = []
+    index = 0
+    for row in ndvi:
+        for val in row:
+            if not np.isnan(val):
+                valeurs.append(round(float(val), 3))
+                index += 1
+    return valeurs
 
 
 
@@ -89,5 +113,15 @@ if __name__ == "__main__":
         output_png = "output/ndvi_carte.png"
         sauver_image_ndvi_carte(ndvi, output_png)
         print(f"Image NDVI style carte sauvegardée sous : {output_png}")
+
+        valeurs_ndvi = extraire_valeurs_ndvi(ndvi)
+
+        # Affiche les 15 dernieres valeurs pour test
+        print(f"Dernieres valeurs NDVI : {valeurs_ndvi[-15:]}")
+
+
+
+
+
     except Exception as e:
         print(f"Erreur: {str(e)}")

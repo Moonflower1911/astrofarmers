@@ -8,7 +8,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/ndvi")
 public class NdviController {
-
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! attention a base_dir
     private static final String BASE_DIR = "C:/Users/Rim/Desktop/Projets_2a/Hamlaoui/development-platform-astrofarmers/backend/";
     private static final String PYTHON_EXE = BASE_DIR + "script_python/venv/Scripts/python.exe";
 
@@ -45,10 +45,10 @@ public class NdviController {
     }
 
     private String parsePythonOutput(String output) {
-        // Extraire les informations pertinentes de la sortie Python
         String stats = "";
         String interpretation = "";
         String imagePath = "";
+        String ndviValues = "";
 
         for (String line : output.split("\n")) {
             if (line.startsWith("NDVI stats")) {
@@ -57,12 +57,18 @@ public class NdviController {
                 interpretation = line.substring(line.indexOf(":") + 1).trim();
             } else if (line.startsWith("Image NDVI")) {
                 imagePath = line.substring(line.indexOf(":") + 1).trim();
+            } else if (line.startsWith("Dernieres valeurs")) {
+                ndviValues = line.substring(line.indexOf(":") + 1).trim();
             }
         }
 
-        return String.format("{\"stats\":\"%s\",\"interpretation\":\"%s\",\"imagePath\":\"%s\"}",
-                stats, interpretation, imagePath);
+        // Retour JSON complet avec ndviValues comme tableau JSON
+        return String.format(
+                "{\"stats\":\"%s\",\"interpretation\":\"%s\",\"imagePath\":\"%s\",\"ndviValues\":%s}",
+                stats, interpretation, imagePath, ndviValues.isEmpty() ? "[]" : ndviValues
+        );
     }
+
 
     private String executePythonScript(String scriptName, String args) throws Exception {
         ProcessBuilder pb = new ProcessBuilder(

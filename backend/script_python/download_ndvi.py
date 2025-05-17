@@ -40,7 +40,7 @@ def download_ndvi(lon, lat, output_dir="uploads"):
         input_data=[
             SentinelHubRequest.input_data(
                 data_collection=DataCollection.SENTINEL2_L2A,
-                time_interval=("2025-01-01", "2025-03-30"),
+                time_interval=("2025-05-01", "2025-05-17"),
                 maxcc=0.3
             )
         ],
