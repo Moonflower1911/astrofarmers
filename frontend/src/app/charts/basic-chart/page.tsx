@@ -1,38 +1,23 @@
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { CampaignVisitors } from "@/components/Charts/campaign-visitors";
-import { UsedDevices } from "@/components/Charts/used-devices";
-import { createTimeFrameExtractor } from "@/utils/timeframe-extractor";
+import BasicChart from "@/components/Charts/BasicChart";
 import { Metadata } from "next";
+import DefaultLayout from "@/components/Layouts/DefaultLaout";
+import React from "react";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 export const metadata: Metadata = {
-  title: "Basic Chart",
+  title: "Next.js Basic Chart Page | NextAdmin - Next.js Dashboard Kit",
+  description: "This is Next.js Basic Chart page for NextAdmin Dashboard Kit",
+  // other metadata
 };
 
-type PropsType = {
-  searchParams: Promise<{
-    selected_time_frame?: string;
-  }>;
-};
-
-export default async function Page(props: PropsType) {
-  const { selected_time_frame } = await props.searchParams;
-  const extractTimeFrame = createTimeFrameExtractor(selected_time_frame);
-
+const BasicChartPage: React.FC = () => {
   return (
-    <>
+    <DefaultLayout>
       <Breadcrumb pageName="Basic Chart" />
 
-      <div className="grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
-        <UsedDevices
-          key={extractTimeFrame("used_devices")}
-          timeFrame={extractTimeFrame("used_devices")?.split(":")[1]}
-          className="col-span-12 xl:col-span-5"
-        />
-
-        <div className="col-span-12 xl:col-span-5">
-          <CampaignVisitors />
-        </div>
-      </div>
-    </>
+      <BasicChart />
+    </DefaultLayout>
   );
-}
+};
+
+export default BasicChartPage;

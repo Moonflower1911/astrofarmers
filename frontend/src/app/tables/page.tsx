@@ -1,34 +1,27 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { InvoiceTable } from "@/components/Tables/invoice-table";
-import { TopChannels } from "@/components/Tables/top-channels";
-import { TopChannelsSkeleton } from "@/components/Tables/top-channels/skeleton";
-import { TopProducts } from "@/components/Tables/top-products";
-import { TopProductsSkeleton } from "@/components/Tables/top-products/skeleton";
+import TableOne from "@/components/Tables/TableOne";
+import TableThree from "@/components/Tables/TableThree";
+import TableTwo from "@/components/Tables/TableTwo";
 
 import { Metadata } from "next";
-import { Suspense } from "react";
+import DefaultLayout from "@/components/Layouts/DefaultLaout";
 
 export const metadata: Metadata = {
-  title: "Tables",
+  title: "Next.js Tables Page | NextAdmin - Next.js Dashboard Kit",
+  description: "This is Next.js Tables page for NextAdmin Dashboard Kit",
 };
 
 const TablesPage = () => {
   return (
-    <>
+    <DefaultLayout>
       <Breadcrumb pageName="Tables" />
 
-      <div className="space-y-10">
-        <Suspense fallback={<TopChannelsSkeleton />}>
-          <TopChannels />
-        </Suspense>
-        
-        <Suspense fallback={<TopProductsSkeleton />}>
-          <TopProducts />
-        </Suspense>
-
-        <InvoiceTable />
+      <div className="flex flex-col gap-10">
+        <TableOne />
+        <TableTwo />
+        <TableThree />
       </div>
-    </>
+    </DefaultLayout>
   );
 };
 
