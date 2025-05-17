@@ -27,10 +27,15 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
         try {
             User registeredUser = authService.registerUser(userDTO);
-            return ResponseEntity.ok("User registered successfully with ID: " + registeredUser.getUserId());
+            String token = JwtUtils.generateToken(registeredUser.getEmail(), "USER");
+            return ResponseEntity.ok(Map.of(
+                    "redirectUrl", "/role/user",
+                    "idUtilisateur", "" + registeredUser.getUserId(),
+                    "token", token
+            ));
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body("Registration failed: " + ex.getMessage());
         }
@@ -49,13 +54,12 @@ public class AuthController {
         User user = optionalUser.get();
         String role = user.getRole().getNomRole(); // Either "USER" or "ADMIN"
         String token = JwtUtils.generateToken(user.getEmail(), role);
-        String redirectUrl = "/" + role.toLowerCase() + "/" + user.getUserId();
+
 
         return ResponseEntity.ok(Map.of(
                 "token", token,
-                "redirectUrl", redirectUrl,
-                "idUtilisateur", "" + user.getUserId(),
-                "role", role
+                "role", role.toLowerCase(),
+                "idUtilisateur", "" + user.getUserId()
         ));
     }
 
