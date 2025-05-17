@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 export default function SignupWithPassword() {
   const [lastname, setLastname] = useState("");
-  const [firstname, setFirstname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -15,7 +14,7 @@ export default function SignupWithPassword() {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/register", {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,8 +22,9 @@ export default function SignupWithPassword() {
         body: JSON.stringify({
           email,
           password,
-          last_name: lastname,
-          first_name: firstname,
+          username: lastname,
+          role: "USER"
+
         }),
       });
 
@@ -35,7 +35,6 @@ export default function SignupWithPassword() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("idUtilisateur", data.idUtilisateur);
         console.log("Login successful. Token saved:", data.token);
-        localStorage.setItem("id", data.id);
         router.push(data.redirectUrl);
       } else {
         console.error("Registration failed:", data.error);
@@ -51,57 +50,27 @@ export default function SignupWithPassword() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label
-          htmlFor="firstname"
-          className="mb-2.5 block font-medium text-dark dark:text-white"
-        >
-          Firstname
-        </label>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Enter your FirstName"
-            name="firstname"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            className="w-full rounded-lg border border-stroke bg-transparent py-[15px] pl-6 pr-11 font-medium text-dark outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
-          />
 
-          <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
-            <span className="absolute right-4.5 top-1/2 -translate-y-1/2">
-              <svg
-                className="fill-current"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-                  fill=""
-                />
-                <path
-                  d="M4 20C4 16.6863 7.13401 14 11 14H13C16.866 14 20 16.6863 20 20V21H4V20Z"
-                  fill=""
-                />
-              </svg>
-            </span>
-          </span>
-        </div>
-      </div>
       <div className="mb-4">
+        <div className="mb-4.5">
+          <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="flex items-center justify-center gap-2 w-1/3 px-6 py-3 rounded-lg font-satoshi text-base font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-white dark:text-blue-600 dark:hover:bg-white/90 transition-all duration-200 shadow-md"
+          >
+            Go Home
+          </button>
+        </div>
         <label
           htmlFor="lastname"
           className="mb-2.5 block font-medium text-dark dark:text-white"
         >
-          Lastname
+          Username
         </label>
         <div className="relative">
           <input
             type="text"
-            placeholder="Enter your LastName"
+            placeholder="Enter your Username"
             name="lastname"
             value={lastname}
             onChange={(e) => setLastname(e.target.value)}
