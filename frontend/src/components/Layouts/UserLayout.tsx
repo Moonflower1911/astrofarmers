@@ -99,7 +99,7 @@ const menuGroup1 = [
             </svg>
         ),
         label: "Weather",
-        route: "http://localhost:3001/role/user/weather",
+        route: "http://localhost:3000/role/user/weather",
       },
     ],
   },

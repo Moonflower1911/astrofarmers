@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.model.DailyForecast;
 import com.example.model.HistoricalWeatherData;
 import com.example.model.ForecastWeatherData;
 import com.example.repository.HistoricalWeatherDataRepository;
@@ -27,21 +28,35 @@ public class WeatherService {
         this.restTemplate = new RestTemplate();
     }
 
-    // Fetch historical data for a specific day
+    // Always fetch fresh forecast data and save it
+    public List<ForecastWeatherData> getForecastData(double lat, double lon) {
+        LocalDate today = LocalDate.now();
+
+        // Always fetch new data from Open-Meteo
+        List<ForecastWeatherData> newForecasts = fetchForecastFromApi(lat, lon, today);
+
+        // Delete existing forecast data for this location
+        forecastRepo.deleteByLatitudeAndLongitude(lat, lon);
+
+        // Save and return new data
+        forecastRepo.saveAll(newForecasts);
+        return newForecasts;
+    }
+
+    // Fetch historical data (unchanged)
     public HistoricalWeatherData getHistoricalData(double lat, double lon, LocalDate date) {
-        // Check if data already exists
         Optional<HistoricalWeatherData> existing = historicalRepo.findByLatitudeAndLongitudeAndDate(lat, lon, date);
         if (existing.isPresent()) {
             return existing.get();
         }
-        // Otherwise, call the API (example URL, adjust parameters as needed)
+
         String url = "https://archive-api.open-meteo.com/v1/archive"
                 + "?latitude=" + lat
                 + "&longitude=" + lon
                 + "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,shortwave_radiation_sum,windspeed_10m_max,winddirection_10m_dominant,cloudcover_mean"
                 + "&timezone=auto"
-                + "&start_date=" + date.toString()
-                + "&end_date=" + date.toString();
+                + "&start_date=" + date
+                + "&end_date=" + date;
 
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
         Map<String, Object> body = response.getBody();
@@ -49,7 +64,6 @@ public class WeatherService {
             throw new RuntimeException("Missing 'daily' data in historical API response");
         }
 
-        // Parse JSON response (assuming similar structure to forecast example)
         Map<String, Object> daily = (Map<String, Object>) body.get("daily");
         List<String> times = (List<String>) daily.get("time");
 
@@ -61,7 +75,6 @@ public class WeatherService {
         List<Double> windDirection = convertToDoubleList((List<?>) daily.get("winddirection_10m_dominant"));
         List<Double> cloudCover = convertToDoubleList((List<?>) daily.get("cloudcover_mean"));
 
-        // Assume one entry since start_date=end_date
         HistoricalWeatherData data = new HistoricalWeatherData();
         data.setDate(LocalDate.parse(times.get(0)));
         data.setLatitude(lat);
@@ -78,58 +91,14 @@ public class WeatherService {
         return historicalRepo.save(data);
     }
 
-    // Fetch forecast data (hourly) for today plus next 7 days for a given location
-    public List<ForecastWeatherData> getForecastData(double lat, double lon) {
-        LocalDate today = LocalDate.now();
-        // Fetch all forecast entries from the table
-        List<ForecastWeatherData> allForecasts = forecastRepo.findAll();
-
-        // Determine if the overall table is outdated
-        boolean needGlobalUpdate = false;
-        if (!allForecasts.isEmpty()) {
-            allForecasts.sort(Comparator.comparing(ForecastWeatherData::getDateTime));
-            ForecastWeatherData latest = allForecasts.get(0);
-            LocalDate latestDate = latest.getDateTime().toLocalDate();
-            System.out.println("Latest forecast date: " + latestDate);
-            System.out.println("Today's date: " + today);
-            if (!latestDate.isEqual(today)) {
-                needGlobalUpdate = true;
-            }
-        } else {
-            needGlobalUpdate = true;
-        }
-
-        if (needGlobalUpdate) {
-            // The table is outdated, so delete all entries
-            forecastRepo.deleteAll();
-            // Fetch forecast for the requested location (today + 7 days)
-            List<ForecastWeatherData> newForecasts = fetchForecastFromApi(lat, lon, today);
-            forecastRepo.saveAll(newForecasts);
-            return newForecasts;
-        } else {
-            // The table is up-to-date overall.
-            // Check if forecasts for the requested location exist.
-            List<ForecastWeatherData> forecastsForLocation = forecastRepo.findByLatitudeAndLongitude(lat, lon);
-            if (forecastsForLocation.isEmpty()) {
-                // If not, fetch and add forecasts for this location.
-                List<ForecastWeatherData> newForecasts = fetchForecastFromApi(lat, lon, today);
-                forecastRepo.saveAll(newForecasts);
-                return newForecasts;
-            } else {
-                return forecastsForLocation;
-            }
-        }
-    }
-
-    // Helper method to fetch forecast data from Open-Meteo API
     private List<ForecastWeatherData> fetchForecastFromApi(double lat, double lon, LocalDate today) {
         String url = "https://api.open-meteo.com/v1/forecast"
                 + "?latitude=" + lat
                 + "&longitude=" + lon
                 + "&hourly=temperature_2m,precipitation,shortwave_radiation,windspeed_10m,winddirection_10m,cloudcover"
                 + "&timezone=auto"
-                + "&start_date=" + today.toString()
-                + "&end_date=" + today.plusDays(7).toString();
+                + "&start_date=" + today
+                + "&end_date=" + today.plusDays(7);
 
         ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
         Map<String, Object> body = response.getBody();
@@ -150,7 +119,6 @@ public class WeatherService {
         List<ForecastWeatherData> newForecasts = new ArrayList<>();
         for (int i = 0; i < times.size(); i++) {
             ForecastWeatherData forecast = new ForecastWeatherData();
-            // Parse the ISO date-time string into LocalDateTime
             forecast.setDateTime(LocalDateTime.parse(times.get(i)));
             forecast.setLatitude(lat);
             forecast.setLongitude(lon);
@@ -163,8 +131,48 @@ public class WeatherService {
             forecast.setSource("Open-Meteo Forecast");
             newForecasts.add(forecast);
         }
+
         return newForecasts;
     }
+
+    public List<DailyForecast> fetchDailyForecast(double lat, double lon) {
+        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,uv_index_max,wind_speed_10m_max,shortwave_radiation_sum&timezone=auto&forecast_days=1", lat, lon);
+
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+        Map<String, List<Object>> dailyData = (Map<String, List<Object>>) response.get("daily");
+
+        if (dailyData == null) return List.of();
+
+        List<DailyForecast> results = new ArrayList<>();
+
+        List<Object> rawDates = dailyData.get("time");
+        List<String> dates = rawDates.stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < dates.size(); i++) {
+            results.add(DailyForecast.builder()
+                    .latitude(lat)
+                    .longitude(lon)
+                    .date(LocalDate.parse(dates.get(i)))
+                    .temperatureMax(asDouble(dailyData.get("temperature_2m_max").get(i)))
+                    .temperatureMin(asDouble(dailyData.get("temperature_2m_min").get(i)))
+                    .sunrise((String) dailyData.get("sunrise").get(i))
+                    .sunset((String) dailyData.get("sunset").get(i))
+                    .precipitationSum(asDouble(dailyData.get("precipitation_sum").get(i)))
+                    .uvIndexMax(asDouble(dailyData.get("uv_index_max").get(i)))
+                    .windSpeedMax(asDouble(dailyData.get("wind_speed_10m_max").get(i)))
+                    .radiationSum(asDouble(dailyData.get("shortwave_radiation_sum").get(i)))
+                    .build());
+        }
+
+        return results;
+    }
+
+    private double asDouble(Object obj) {
+        return obj instanceof Number ? ((Number) obj).doubleValue() : 0.0;
+    }
+
 
     private List<Double> convertToDoubleList(List<?> list) {
         return list.stream()
@@ -172,4 +180,3 @@ public class WeatherService {
                 .collect(Collectors.toList());
     }
 }
-

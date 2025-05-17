@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.model.DailyForecast;
 import com.example.model.HistoricalWeatherData;
 import com.example.model.ForecastWeatherData;
 import com.example.service.WeatherService;
@@ -55,4 +56,13 @@ public class WeatherController {
         List<ForecastWeatherData> data = service.getForecastData(lat, lon);
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/daily")
+    public ResponseEntity<List<DailyForecast>> getDailyForecast(
+            @RequestParam double lat,
+            @RequestParam double lon) {
+        List<DailyForecast> forecast = service.fetchDailyForecast(lat, lon);
+        return ResponseEntity.ok(forecast);
+    }
+
 }
