@@ -136,7 +136,9 @@ public class WeatherService {
     }
 
     public List<DailyForecast> fetchDailyForecast(double lat, double lon) {
-        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,uv_index_max,wind_speed_10m_max,shortwave_radiation_sum&timezone=auto&forecast_days=1", lat, lon);
+        String url = "https://api.open-meteo.com/v1/forecast"+ "?latitude=" + lat
+                + "&longitude=" + lon
+                + "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,uv_index_max,wind_speed_10m_max,shortwave_radiation_sum&timezone=auto&forecast_days=1";
 
         Map<String, Object> response = restTemplate.getForObject(url, Map.class);
         Map<String, List<Object>> dailyData = (Map<String, List<Object>>) response.get("daily");

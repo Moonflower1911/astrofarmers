@@ -154,7 +154,10 @@ If your project uses Python scripts for ML processing:
 
 ---
 ### 🔔 Weather and Alerts
-![weather Screenshot](images/7.png)
+![weather Screenshot](images/32.png)
+*Daily Weather.*
+---
+![weather Screenshot](images/31.png)
 *Weather Forecast.*
 ---
 ![weather Screenshot](images/8.png)
