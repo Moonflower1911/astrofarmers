@@ -42,7 +42,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, menuGroup }: SidebarProps) => {
               <Image
                   width={176}
                   height={32}
-                  src={"/images/logo/logo-light.svg"}
+                  src={"/images/logo/logo.svg"}
                   alt="Logo"
                   priority
                   className="hidden dark:block"

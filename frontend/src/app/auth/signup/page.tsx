@@ -28,14 +28,14 @@ const SignIn: React.FC = () => {
               >
                 <Image
                   className="hidden dark:block"
-                  src={"/images/logo/StageLink_dark.png"}
+                  src={"/images/logo/logo.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
                 />
                 <Image
                   className="dark:hidden"
-                  src={"/images/logo/StageLink_light.png"}
+                  src={"/images/logo/logo-dark.svg"}
                   alt="Logo"
                   width={176}
                   height={32}

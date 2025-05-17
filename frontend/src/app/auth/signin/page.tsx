@@ -28,7 +28,7 @@ const SignIn: React.FC = () => {
               >
                 <Image
                   className="hidden dark:block"
-                  src={"/images/logo/logo-light.svg"}
+                  src={"/images/logo/logo.svg"}
                   alt="Logo"
                   width={176}
                   height={32}
