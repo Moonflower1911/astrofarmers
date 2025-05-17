@@ -18,6 +18,7 @@ export default function LandList() {
 
     useEffect(() => {
         const fetchLands = async () => {
+
             const userId = localStorage.getItem("idUtilisateur");
             const token = localStorage.getItem("token");
 
@@ -38,7 +39,6 @@ export default function LandList() {
                     const errorText = await response.text();
                     throw new Error(`Failed to fetch lands: ${response.status} - ${errorText}`);
                 }
-
                 const data = await response.json();
                 setLands(data);
             } catch (err) {
