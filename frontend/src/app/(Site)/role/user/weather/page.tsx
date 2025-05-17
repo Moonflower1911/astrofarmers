@@ -76,7 +76,7 @@ const UserPage = () => {
     });
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const cardsToShow = 6;
+    const cardsToShow = 4;
 
     const next = () => {
         if (currentIndex + cardsToShow < filtered.length) {
@@ -361,34 +361,30 @@ const UserPage = () => {
                     {/* Forecast Cards */}
                     {filtered.length === 0 ? (
                         <div className="flex justify-center items-center h-40">
-                            <p className="text-white/70 dark:text-gray-500 italic">No forecast data available for this date</p>
+                            <p className="text-white/70 dark:text-gray-500 italic">
+                                No forecast data available for this date
+                            </p>
                         </div>
                     ) : (
-                        <div className="relative mt-6">
+                        <div className="mt-6 w-full flex justify-center items-center gap-4">
                             {/* Left Arrow */}
-                            {currentIndex > 0 && (
-                                <button
-                                    onClick={prev}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 shadow-lg p-3 rounded-full hover:scale-110 transition-all duration-200"
-                                    aria-label="Previous forecast"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 text-white dark:text-gray-100"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </button>
-                            )}
+                            <button
+                                onClick={prev}
+                                disabled={currentIndex === 0}
+                                className="bg-blue-600 hover:bg-blue-700 shadow-lg p-3 rounded-full hover:scale-110 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                                aria-label="Previous forecast"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                            </button>
 
                             {/* Cards */}
-                            <div className="flex justify-center space-x-4 overflow-hidden px-16 py-4">
+                            <div className="flex space-x-4 overflow-hidden px-4 py-4">
                                 {filtered.slice(currentIndex, currentIndex + cardsToShow).map((forecast) => {
                                     const hour = new Date(forecast.dateTime).getHours();
                                     const icon = getWeatherIconComponent(hour, forecast.cloudCover, forecast.precipitation);
@@ -397,25 +393,24 @@ const UserPage = () => {
                                         minute: "2-digit",
                                     });
 
-                                    // --- Find alert for this hour
                                     const forecastDate = new Date(forecast.dateTime);
                                     const alertMatch = alerts.find((a) => {
                                         const alertDate = new Date(a.timestamp);
-                                        return alertDate.getHours() === forecastDate.getHours() &&
-                                            alertDate.toDateString() === forecastDate.toDateString();
+                                        return (
+                                            alertDate.getHours() === forecastDate.getHours() &&
+                                            alertDate.toDateString() === forecastDate.toDateString()
+                                        );
                                     });
 
                                     return (
                                         <div
                                             key={forecast.id}
-                                            className="flex-shrink-0 w-48 bg-white/90 dark:bg-gray-50 rounded-xl shadow-lg p-4 flex flex-col items-center text-center border border-white/20 dark:border-gray-200 backdrop-blur-sm hover:scale-[1.02] transition-transform duration-200"
+                                            className="flex-shrink-0 w-48 bg-white/90 dark:bg-gray-50 rounded-xl shadow-lg p-4 flex flex-col items-center text-center border border-white/20 dark:border-gray-200 backdrop-blur-sm hover:scale-[1.02] transition-transform duration-200 relative"
                                         >
-                                            {/* Optional alert icon */}
+                                            {/* Alert Icon */}
                                             {alertMatch && (
                                                 <div className="absolute top-2 right-2 group cursor-pointer">
-                                                    <div className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold text-sm shadow-md">
-                                                        !
-                                                    </div>
+                                                    <div className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold text-sm shadow-md">!</div>
                                                     <div className="absolute top-6 right-0 w-48 z-50 hidden group-hover:block bg-white dark:bg-gray-100 text-gray-800 dark:text-gray-900 text-sm p-2 rounded-md shadow-lg border border-gray-300 dark:border-gray-400">
                                                         <strong>{alertMatch.type}</strong>
                                                         <br />
@@ -424,30 +419,29 @@ const UserPage = () => {
                                                 </div>
                                             )}
 
-
                                             <div className="text-base font-semibold text-gray-700 dark:text-gray-800">{timeStr}</div>
                                             <div className="my-3 scale-[1.5]">{icon}</div>
                                             <div className="text-3xl font-bold text-gray-800 dark:text-gray-900">{forecast.temperature}°</div>
 
-                                            <div className="w-full mt-4 space-y-2">
-                                                <div className="flex justify-center items-center gap-2 text-sm text-gray-600 dark:text-gray-700">
+                                            <div className="w-full mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-700">
+                                                <div className="flex justify-center items-center gap-2">
                                                     <span className="text-blue-500 text-lg">☂</span>
                                                     <span>{forecast.precipitation}% precipitation</span>
                                                 </div>
-                                                <div className="flex justify-center items-center gap-2 text-sm text-gray-600 dark:text-gray-700">
+                                                <div className="flex justify-center items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fillRule="evenodd" d="M5 9a7 7 0 0111.95 4.95l1.414-1.414A9 9 0 005 7v2z" clipRule="evenodd" />
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clipRule="evenodd" />
                                                     </svg>
                                                     <span>{Math.round(forecast.windSpeed)} km/h winds</span>
                                                 </div>
-                                                <div className="flex justify-center items-center gap-2 text-sm text-gray-600 dark:text-gray-700">
+                                                <div className="flex justify-center items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                                     </svg>
                                                     <span>{getWindDirectionLabel(forecast.windDirection)}</span>
                                                 </div>
-                                                <div className="flex justify-center items-center gap-2 text-sm text-gray-600 dark:text-gray-700">
+                                                <div className="flex justify-center items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                                         <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z" />
                                                     </svg>
@@ -460,28 +454,23 @@ const UserPage = () => {
                             </div>
 
                             {/* Right Arrow */}
-                            {currentIndex + cardsToShow < filtered.length && (
-                                <button
-                                    onClick={next}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 shadow-lg p-3 rounded-full hover:scale-110 transition-all duration-200"
-                                    aria-label="Next forecast"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 text-white dark:text-gray-100"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </button>
-                            )}
+                            <button
+                                onClick={next}
+                                disabled={currentIndex + cardsToShow >= filtered.length}
+                                className="bg-blue-600 hover:bg-blue-700 shadow-lg p-3 rounded-full hover:scale-110 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                                aria-label="Next forecast"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor">
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                            </button>
                         </div>
                     )}
+
                 </div>
 
 
