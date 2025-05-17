@@ -5,53 +5,8 @@ import Header from "@/components/Header";
 
 const menuGroup1 = [
   {
-    name: "User MENU",
+    name: "Admin MENU",
     menuItems: [
-      {
-        icon: (
-          <svg
-            className="h-6 w-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
-            />
-          </svg>
-        ),
-        label: "Weather",
-        route: "http://localhost:3001/role/user/weather",
-      },{
-      icon: (
-    <svg
-        className="h-6 w-6 text-gray-800 dark:text-white"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        fill="none"
-        viewBox="0 0 24 24"
-    >
-      <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 0v6M9.5 9A2.5 2.5 0 0 1 12 6.5"
-      />
-    </svg>
-),
-    label: "Land",
-    route: "/role/user/land",
-},
       {
         icon: (
             <svg
@@ -77,9 +32,6 @@ const menuGroup1 = [
             </svg>
         ),
         label: "Profile",
-<<<<<<< Updated upstream
-        route: "/role/user/profile",
-=======
         route: "/role/CF/profile",
       },
       {
@@ -121,7 +73,7 @@ const menuGroup1 = [
               />
             </svg>
         ),
-        label: "Land Soil Dashboard",
+        label: "Irrigation",
         route: "http://localhost:3000/role/user/irrigation",
       },
       {
@@ -148,47 +100,46 @@ const menuGroup1 = [
         ),
         label: "Weather",
         route: "http://localhost:3000/role/user/weather",
->>>>>>> Stashed changes
       },
     ],
   },
 ];
 
 export default function UserLayout({
-  children,
-}: {
+                                      children,
+                                    }: {
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <>
-      {/* <!-- ===== Page Wrapper Star ===== --> */}
-      <div className="flex h-screen overflow-hidden">
-        {/* <!-- ===== Sidebar Star ===== --> */}
-        <Sidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          menuGroup={menuGroup1}
-        />
-        {/* <!-- ===== Sidebar End ===== --> */}
+      <>
+        {/* <!-- ===== Page Wrapper Star ===== --> */}
+        <div className="flex h-screen overflow-hidden">
+          {/* <!-- ===== Sidebar Star ===== --> */}
+          <Sidebar
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              menuGroup={menuGroup1}
+          />
+          {/* <!-- ===== Sidebar End ===== --> */}
 
-        {/* <!-- ===== Content Area Star ===== --> */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          {/* <!-- ===== Header Star ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          {/* <!-- ===== Header End ===== --> */}
+          {/* <!-- ===== Content Area Star ===== --> */}
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+            {/* <!-- ===== Header Star ===== --> */}
+            <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            {/* <!-- ===== Header End ===== --> */}
 
-          {/* <!-- ===== Main Content Star ===== --> */}
-          <main>
-            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-              {children}
-            </div>
-          </main>
-          {/* <!-- ===== Main Content End ===== --> */}
+            {/* <!-- ===== Main Content Star ===== --> */}
+            <main>
+              <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                {children}
+              </div>
+            </main>
+            {/* <!-- ===== Main Content End ===== --> */}
+          </div>
+          {/* <!-- ===== Content Area End ===== --> */}
         </div>
-        {/* <!-- ===== Content Area End ===== --> */}
-      </div>
-      {/* <!-- ===== Page Wrapper End ===== --> */}
-    </>
+        {/* <!-- ===== Page Wrapper End ===== --> */}
+      </>
   );
 }
