@@ -1,5 +1,6 @@
 'use client';
 
+
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L, { LeafletMouseEvent } from "leaflet";
@@ -24,15 +25,23 @@ export default function AddLandForm() {
             return;
         }
 
+        const userId = localStorage.getItem("idUtilisateur");
+        const token = localStorage.getItem("token");
+
+        if (!userId || !token) {
+            setMessage("❌ You must be logged in to add land.");
+            return;
+        }
+
         try {
-            const response = await fetch("http://localhost:8080/api/lands/add?userId=3", {
+            const response = await fetch(`http://localhost:8080/api/lands/add?userId=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWlkQGZhcm0uY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NDc0NTIyMDIsImV4cCI6MTc0NzUzODYwMn0.TvxlpeSnyM8-y5-qQdIizI66Bc4c4dbKXwT87kdp6t0"
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    name: name,
+                    name,
                     latitude: coords.lat,
                     longitude: coords.lng,
                 }),
@@ -50,7 +59,6 @@ export default function AddLandForm() {
             setMessage("❌ Error: " + (error as Error).message);
         }
     };
-
     function LocationPicker() {
         useMapEvents({
             click(e: LeafletMouseEvent) {

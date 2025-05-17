@@ -18,15 +18,26 @@ export default function LandList() {
 
     useEffect(() => {
         const fetchLands = async () => {
+            const userId = localStorage.getItem("idUtilisateur");
+            const token = localStorage.getItem("token");
+
+            if (!userId || !token) {
+                setError("❌ You must be logged in to view lands.");
+                setLoading(false);
+                return;
+            }
+
             try {
-                const response = await fetch("http://localhost:8080/api/lands/user/3", {
+                const response = await fetch(`http://localhost:8080/api/lands/user/${userId}`, {
                     headers: {
-                        Authorization:
-                            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWlkQGZhcm0uY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NDc0NTIyMDIsImV4cCI6MTc0NzUzODYwMn0.TvxlpeSnyM8-y5-qQdIizI66Bc4c4dbKXwT87kdp6t0",
+                        Authorization: `Bearer ${token}`,
                     },
                 });
 
-                if (!response.ok) throw new Error("Failed to fetch lands");
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch lands: ${response.status} - ${errorText}`);
+                }
 
                 const data = await response.json();
                 setLands(data);
