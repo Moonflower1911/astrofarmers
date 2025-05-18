@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 export default function SigninWithPassword() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    setError("");
     try {
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
@@ -31,10 +33,10 @@ export default function SigninWithPassword() {
         localStorage.setItem("id", data.id);
         router.push(data.redirectUrl);
       } else {
-        console.error("Login failed:", data.error);
+        setError(data.error || "Login failed");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      setError("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -46,6 +48,13 @@ export default function SigninWithPassword() {
       <>
 
         <form onSubmit={handleSubmit}>
+
+          {/* 🔴 Display error if present */}
+          {error && (
+              <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                {error}
+              </div>
+          )}
 
           <div className="mb-4">
             <label
