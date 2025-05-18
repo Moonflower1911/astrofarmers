@@ -37,7 +37,7 @@ public class AuthController {
                     "token", token
             ));
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body("Registration failed: " + ex.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", "Registration failed: " + ex.getMessage()));
         }
     }
 
