@@ -248,19 +248,21 @@ INSERT INTO role (role_id, role_name) VALUES
 
 ---
 
-## 📁 Project Structure (Example)
+## 📁 Project Structure (Simplified Version)
 
 ```bash
 .
-├── backend/               # Spring Boot API and services
+├── backend/
+│   ├── script_python/           
 │   └── src/
-├── frontend/              # React or Angular frontend
-│   └── src/
-├── script_python/         # ML or data processing scripts (optional)
-│   ├── venv/
-│   └── process_data.py
-├── .env                   # Environment configuration
-└── README.md              # Project documentation
+│       └── main/
+│           ├── java/            
+│           └── resources/
+│               ├── application.properties
+│               └── .env.properties  
+├── frontend/                              
+├── images/   
+└── README.md             
 ```
 
 ---
