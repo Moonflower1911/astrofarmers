@@ -40,26 +40,27 @@ git clone https://github.com/m-elhamlaoui/development-platform-astrofarmers.git
 cd development-platform-astrofarmers
 ```
 
+
+
 ### 2. Backend Setup (Spring Boot)
 
-* Navigate to the backend directory:
-
-  ```bash
-  cd backend
-  ```
-
-* Create a `.env` file in the backend root (or set environment variables in your IDE or OS):
+* Create a `.env.properties` file inside `backend/src/main/resources`:
 
   ```env
-  SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/agri_db
-  SPRING_DATASOURCE_USERNAME=your_db_username
-  SPRING_DATASOURCE_PASSWORD=your_db_password
-  SPRING_JPA_HIBERNATE_DDL_AUTO=update
-  ALERT_THRESHOLDS_TEMPERATURE=45
-  ALERT_THRESHOLDS_WIND_SPEED=70
-  ALERT_THRESHOLDS_PRECIPITATION=50
-  ALERT_THRESHOLDS_RADIATION=22
-  ALERT_THRESHOLDS_CLOUD_COVER=90
+  spring.application.name=backend
+  spring.datasource.url=jdbc:postgresql://localhost:5432/agri_db
+  spring.datasource.username=postgres
+  spring.datasource.password=1234
+
+  spring.jpa.hibernate.ddl-auto=update
+
+  # === Alert Thresholds ===
+  alert.thresholds.temperature=45
+  alert.thresholds.wind-speed=70
+  alert.thresholds.precipitation=50
+  alert.thresholds.radiation=22
+  alert.thresholds.cloud-cover=90
+
   ```
 
 * Update the Nvdi Controller:
@@ -67,12 +68,50 @@ cd development-platform-astrofarmers
   ```bash
   BASE_DIR = "<your-absolute-path-to-the-project>/development-platform-astrofarmers/backend/"
   ```
-
-> Ensure that PostgreSQL is installed and running, and the database `agri_db` exists.
-
 ---
 
-### 3. Frontend Setup (Next.js)
+### 3. Database Setup
+
+- Ensure that **PostgreSQL** is installed and running.
+- Create a database named `agri_db`.
+
+
+Before running the backend, make sure the following roles exist in the `role` table:
+
+| id | nom_role |
+|----|----------|
+| 1  | USER     |
+| 2  | ADMIN    |
+
+You can insert them manually using SQL:
+
+```sql
+INSERT INTO role (role_id, role_name) VALUES
+(1, 'USER'),
+(2, 'ADMIN');
+```
+
+### 4. Python Scripts
+
+* Ensure Python 3.12+ is installed.
+
+* Change the venv Configuration :
+
+  ```bash
+  cd script_python/venv
+  ```
+
+  Open the pyvenv.cfg and update it :
+  ```bash
+  home = <full_path_to_python_installation_directory>
+  include-system-site-packages = false
+  version = 3.12.2
+  executable = <full_path_to_python_executable>
+  command = <full_path_to_python_executable> -m venv <full_path_to_virtual_environment>
+  ```
+
+
+### 5. Frontend Setup (Next.js)
 
 * Navigate to the frontend directory:
 
@@ -88,8 +127,6 @@ cd development-platform-astrofarmers
   npm install leaflet
   npm install chart.js react-chartjs-2
   npm install react-icons
-
-
   ```
 
 * Start the frontend development server:
@@ -99,31 +136,6 @@ cd development-platform-astrofarmers
   ```
 
 * Open your browser and go to: [http://localhost:3000](http://localhost:3000)
-
----
-
-### 4. Python Scripts 
-
-If your project uses Python scripts for ML processing:
-
-* Ensure Python 3.12+ is installed.
-
-* Change the venv Configuration :
-
-  ```bash
-  cd script_python/venv
-  ```
-  
-  Open the pyvenv.cfg and update it :
-  ```bash
-  home = <full_path_to_python_installation_directory>
-  include-system-site-packages = false
-  version = 3.12.2
-  executable = <full_path_to_python_executable>
-  command = <full_path_to_python_executable> -m venv <full_path_to_virtual_environment>
-
-  ```
-
 
 
 ---
