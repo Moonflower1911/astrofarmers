@@ -1,0 +1,31 @@
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8080:8080"  # Maps host 8080 → container 8080
+    environment:
+      - python.venv_path=/app/script_python/venv
+      - python.scripts_dir=/app/script_python
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/agri_db  # For local DB
+    volumes:
+      - ./backend/script_python:/app/script_python  # For development
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"  # Maps host 3000 → container 3000
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080  # Internal Docker network URL
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
