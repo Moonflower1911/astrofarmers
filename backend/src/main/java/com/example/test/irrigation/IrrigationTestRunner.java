@@ -10,6 +10,7 @@ import com.example.repository.irrigation.*;
 import com.example.service.irrigation.IrrigationSchedulingService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.util.*;

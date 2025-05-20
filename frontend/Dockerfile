@@ -1,24 +1,15 @@
-# Build stage
-FROM node:18-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# Runtime stage
+# Simple Dockerfile for dev mode
 FROM node:18-alpine
 WORKDIR /app
-ENV NODE_ENV production
 
-# Copy built assets
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/public ./public
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/node_modules ./node_modules
+COPY package*.json ./
+RUN npm install
 
-# Update API URLs for Docker environment
+COPY . .
+
+ENV NODE_ENV=development
 ENV NEXT_PUBLIC_API_URL=http://backend:8080
 
 EXPOSE 3000
-CMD ["npm", "start"]
+
+CMD ["npm", "run", "dev"]

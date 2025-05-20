@@ -15,7 +15,7 @@ export default function NDVIAnalysisPage() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/ndvi', {
+            const response = await fetch('http://localhost:8080/ndvi/from-coords', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,45 +24,96 @@ export default function NDVIAnalysisPage() {
             });
 
             if (!response.ok) {
-                throw new Error('Erreur lors de la récupération des données NDVI');
+                throw new Error('Error fetching NDVI data');
             }
 
-            const data = await response.json();
+            // Handle both JSON and text responses
+            let data;
+            const responseText = await response.text();
 
-            // ✅ Traitement des statistiques (objet ou chaîne)
-            let stats = { min: 0, max: 0, mean: 0 };
-
-            if (typeof data.stats === 'string') {
-                const statsMatch = data.stats.match(/min: ([\d.]+), max: ([\d.]+), mean: ([\d.]+)/);
-                if (statsMatch) {
-                    stats = {
-                        min: parseFloat(statsMatch[1]),
-                        max: parseFloat(statsMatch[2]),
-                        mean: parseFloat(statsMatch[3]),
-                    };
-                }
-            } else if (typeof data.stats === 'object' && data.stats !== null) {
-                stats = {
-                    min: parseFloat(data.stats.min) || 0,
-                    max: parseFloat(data.stats.max) || 0,
-                    mean: parseFloat(data.stats.mean) || 0,
-                };
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                // If not valid JSON, parse as text
+                data = parseTextResponse(responseText);
             }
 
-            const cleanData = {
-                stats,
-                interpretation: data.interpretation || "Aucune interprétation fournie.",
-                imagePath: data.imagePath || "",
-                ndviValues: Array.isArray(data.ndviValues) ? data.ndviValues : [],
-            };
+            // Normalize the data structure
+            const normalizedData = normalizeData(data);
 
-            setNdviData(cleanData);
+            setNdviData(normalizedData);
             setActiveTab("results");
         } catch (error) {
-            console.error("Erreur:", error);
+            console.error("Error:", error);
+            alert("Failed to get NDVI data. Please try again.");
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // Helper function to parse text responses
+    const parseTextResponse = (text: string): any => {
+        const result: any = {
+            stats: { min: 0, max: 0, mean: 0 },
+            interpretation: "",
+            imagePath: "",
+            ndviValues: []
+        };
+
+        // Parse stats
+        const statsMatch = text.match(/min: ([\d.]+), max: ([\d.]+), mean: ([\d.]+)/);
+        if (statsMatch) {
+            result.stats = {
+                min: parseFloat(statsMatch[1]),
+                max: parseFloat(statsMatch[2]),
+                mean: parseFloat(statsMatch[3])
+            };
+        }
+
+        // Parse interpretation
+        const interpretationMatch = text.match(/Interpretation: (.+)/);
+        if (interpretationMatch) result.interpretation = interpretationMatch[1];
+
+        // Parse image path
+        const imageMatch = text.match(/Image NDVI: (.+)/);
+        if (imageMatch) result.imagePath = imageMatch[1];
+
+        // Parse NDVI values
+        const valuesMatch = text.match(/NDVI_VALUES=\[([\d., ]+)\]/);
+        if (valuesMatch) {
+            result.ndviValues = valuesMatch[1].split(',').map(parseFloat);
+        }
+
+        return result;
+    };
+
+    // Helper function to normalize data structure
+    const normalizeData = (data: any) => {
+        // Extract min, max, mean from stats string if needed
+        if (typeof data.stats === 'string') {
+            const statsMatch = data.stats.match(/min:\s*([\d.]+),?\s*max:\s*([\d.]+),?\s*mean:\s*([\d.]+)/i);
+            if (statsMatch) {
+                data.stats = {
+                    min: parseFloat(statsMatch[1]),
+                    max: parseFloat(statsMatch[2]),
+                    mean: parseFloat(statsMatch[3]),
+                };
+            } else {
+                data.stats = { min: 0, max: 0, mean: 0 };
+            }
+        }
+
+        // Ensure ndviValues is an array
+        if (!Array.isArray(data.ndviValues)) {
+            data.ndviValues = [];
+        }
+
+        return {
+            stats: data.stats,
+            interpretation: data.interpretation || "No interpretation available",
+            imagePath: data.imagePath || "",
+            ndviValues: data.ndviValues,
+        };
     };
 
     return (
@@ -72,8 +123,8 @@ export default function NDVIAnalysisPage() {
                     <button
                         onClick={() => setActiveTab("map")}
                         className={`flex items-center gap-2 rounded-full py-2 px-6 font-medium ${
-                            activeTab === "map" 
-                                ? "bg-primary text-white" 
+                            activeTab === "map"
+                                ? "bg-primary text-white"
                                 : "bg-gray-2 text-gray-7 dark:bg-meta-4 dark:text-white"
                         }`}
                     >
@@ -84,8 +135,8 @@ export default function NDVIAnalysisPage() {
                         onClick={() => selectedLocation && setActiveTab("results")}
                         disabled={!selectedLocation}
                         className={`flex items-center gap-2 rounded-full py-2 px-6 font-medium ${
-                            activeTab === "results" 
-                                ? "bg-primary text-white" 
+                            activeTab === "results"
+                                ? "bg-primary text-white"
                                 : "bg-gray-2 text-gray-7 dark:bg-meta-4 dark:text-white"
                         } ${!selectedLocation ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
@@ -99,8 +150,8 @@ export default function NDVIAnalysisPage() {
                     </div>
                 ) : activeTab === "map" ? (
                     <div className="rounded-lg overflow-hidden border border-stroke dark:border-strokedark">
-                        <NDVIMap 
-                            onLocationSelect={handleLocationSelect} 
+                        <NDVIMap
+                            onLocationSelect={handleLocationSelect}
                             initialPosition={selectedLocation}
                         />
                     </div>
@@ -110,12 +161,12 @@ export default function NDVIAnalysisPage() {
                             <NDVIResults data={ndviData} />
                         ) : (
                             <div className="text-center py-10">
-                                <p>Aucune donnée NDVI disponible</p>
-                                <button 
+                                <p>No NDVI data available</p>
+                                <button
                                     onClick={() => setActiveTab("map")}
                                     className="mt-4 text-primary hover:underline"
                                 >
-                                    Sélectionnez une localisation
+                                    Select a location first
                                 </button>
                             </div>
                         )}
