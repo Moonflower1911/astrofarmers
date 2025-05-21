@@ -14,6 +14,12 @@ pipeline {
         }
 
         stage('Build Backend') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir("${env.BACKEND_DIR}") {
                     sh 'mvn clean package -DskipTests'
@@ -22,10 +28,16 @@ pipeline {
         }
 
         stage('Build Frontend') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir("${env.FRONTEND_DIR}") {
                     sh 'npm install'
-                    sh 'npm run dev'
+                    sh 'npm run build'  // use "build" instead of "dev" for CI builds
                 }
             }
         }
@@ -38,7 +50,7 @@ pipeline {
 
         stage('Restart Services') {
             steps {
-                sh 'docker compose down'
+                sh 'docker compose down || true'
                 sh 'docker compose up -d'
             }
         }
@@ -46,10 +58,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment completed successfully.'
+            echo '✅ Deployment completed successfully.'
         }
         failure {
-            echo 'Build or deployment failed.'
+            echo '❌ Build or deployment failed.'
         }
     }
 }
