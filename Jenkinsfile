@@ -16,41 +16,37 @@ pipeline {
         }
 
         stage('Build Backend') {
-            agent {
-                docker {
-                    image 'maven:3.9.4-eclipse-temurin-17'
-                }
-            }
             steps {
-                dir("${env.BACKEND_DIR}") {
-                    sh 'mvn clean package -DskipTests'
+                script {
+                    docker.image('maven:3.9.4-eclipse-temurin-17').inside {
+                        dir("${env.BACKEND_DIR}") {
+                            sh 'mvn clean package -DskipTests'
+                        }
+                    }
                 }
             }
         }
 
         stage('Build Frontend') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                }
-            }
             steps {
-                dir("${env.FRONTEND_DIR}") {
-                    sh 'npm install'
-                    sh 'npm run build'
+                script {
+                    docker.image('node:18-alpine').inside {
+                        dir("${env.FRONTEND_DIR}") {
+                            sh 'npm install'
+                            sh 'npm run build'
+                        }
+                    }
                 }
             }
         }
 
         stage('Build Docker Images') {
-            agent any
             steps {
                 sh 'docker compose build'
             }
         }
 
         stage('Restart Services') {
-            agent any
             steps {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d'
