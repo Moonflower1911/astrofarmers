@@ -4,12 +4,14 @@ pipeline {
     environment {
         BACKEND_DIR = 'backend'
         FRONTEND_DIR = 'frontend'
+        BACKEND_IMAGE = 'astro-backend'
+        FRONTEND_IMAGE = 'astro-frontend'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Using mounted workspace (no clone needed)'
+                echo '✅ Using mounted workspace — no need to clone again.'
             }
         }
 
@@ -17,7 +19,6 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.4-eclipse-temurin-17'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
@@ -31,24 +32,25 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-alpine'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
                 dir("${env.FRONTEND_DIR}") {
                     sh 'npm install'
-                    sh 'npm run build'  // use "build" instead of "dev" for CI builds
+                    sh 'npm run build'
                 }
             }
         }
 
         stage('Build Docker Images') {
+            agent any
             steps {
                 sh 'docker compose build'
             }
         }
 
         stage('Restart Services') {
+            agent any
             steps {
                 sh 'docker compose down || true'
                 sh 'docker compose up -d'
