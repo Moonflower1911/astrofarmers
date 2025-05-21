@@ -9,7 +9,7 @@ import java.util.*;
 @RequestMapping("/ndvi")
 public class NdviController {
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! attention a base_dir
-    private static final String BASE_DIR = "C:/Users/ASUS/Desktop/development-platform-astrofarmers/backend/";;
+    private static final String BASE_DIR = "D:/Projects/development-platform-astrofarmers/backend/";;
     private static final String PYTHON_EXE = BASE_DIR + "script_python/venv/Scripts/python.exe";
 
     @PostMapping("/from-coords")
