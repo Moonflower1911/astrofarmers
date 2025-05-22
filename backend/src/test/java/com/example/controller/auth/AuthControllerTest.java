@@ -2,6 +2,7 @@ package com.example.controller.auth;
 
 import com.example.dto.LoginRequestDTO;
 import com.example.dto.UserDTO;
+import com.example.model.auth.Role;
 import com.example.model.auth.User;
 import com.example.repository.auth.UserRepository;
 import com.example.security.JwtUtils;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,9 +35,6 @@ class AuthControllerTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private JwtUtils jwtUtils;
-
     @InjectMocks
     private AuthController authController;
 
@@ -44,6 +44,7 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
+        // Initialize test data
         testUserDto = new UserDTO();
         testUserDto.setUsername("testuser");
         testUserDto.setEmail("test@example.com");
@@ -51,10 +52,16 @@ class AuthControllerTest {
         testUserDto.setRole("USER");
 
         testUser = new User();
-        testUser.setUserId(1L); // Auto-generated ID
+        testUser.setUserId(1L);
         testUser.setUsername("testuser");
         testUser.setEmail("test@example.com");
         testUser.setPassword(PasswordUtils.hashPassword("password123"));
+
+        Role role = new Role();
+        role.setRoleId(1L);
+        role.setNomRole("USER");
+
+        testUser.setRole(role);
 
         loginRequest = new LoginRequestDTO();
         loginRequest.setEmail("test@example.com");
@@ -63,43 +70,70 @@ class AuthControllerTest {
 
     @Test
     void registerUser_Success() {
-        when(authService.registerUser(any(UserDTO.class))).thenReturn(testUser);
-        when(jwtUtils.generateToken(anyString(), anyString())).thenReturn("testtoken");
+        Role role = new Role();
+        role.setRoleId(1L);
+        role.setNomRole("USER");
 
-        ResponseEntity<?> response = authController.registerUser(testUserDto);
+        when(authService.registerUser(any(UserDTO.class))).thenAnswer(invocation -> {
+            UserDTO dto = invocation.getArgument(0);
+            User user = new User();
+            user.setUserId(1L);
+            user.setEmail(dto.getEmail());
+            user.setRole(role);
+            return user;
+        });
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        // Mock static method JwtUtils.generateToken
+        try (MockedStatic<JwtUtils> jwtUtilsStatic = mockStatic(JwtUtils.class)) {
+            jwtUtilsStatic.when(() -> JwtUtils.generateToken(testUserDto.getEmail(), testUserDto.getRole()))
+                    .thenReturn("testtoken");
 
-        @SuppressWarnings("unchecked")
-        Map<String, String> responseBody = (Map<String, String>) response.getBody();
-        assertNotNull(responseBody);
-        assertEquals("/role/user", responseBody.get("redirectUrl"));
-        assertEquals("1", responseBody.get("idUtilisateur")); // Verify auto-generated ID
-        assertEquals("testtoken", responseBody.get("token"));
+            ResponseEntity<?> response = authController.registerUser(testUserDto);
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> responseBody = (Map<String, String>) response.getBody();
+            assertNotNull(responseBody);
+            assertEquals("/role/user", responseBody.get("redirectUrl"));
+            assertEquals("1", responseBody.get("idUtilisateur"));
+            assertEquals("testtoken", responseBody.get("token"));
+
+            verify(authService).registerUser(any(UserDTO.class));
+            jwtUtilsStatic.verify(() -> JwtUtils.generateToken(testUserDto.getEmail(), testUserDto.getRole()));
+        }
     }
 
     @Test
     void login_Success() {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
-        when(jwtUtils.generateToken(anyString(), anyString())).thenReturn("testtoken");
 
-        ResponseEntity<Map<String, String>> response = authController.login(loginRequest);
+        try (MockedStatic<JwtUtils> jwtUtilsMockedStatic = mockStatic(JwtUtils.class)) {
+            jwtUtilsMockedStatic.when(() -> JwtUtils.generateToken("test@example.com", "USER"))
+                    .thenReturn("testtoken");
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        Map<String, String> responseBody = response.getBody();
-        assertNotNull(responseBody);
-        assertEquals("testtoken", responseBody.get("token"));
-        assertEquals("1", responseBody.get("idUtilisateur")); // Verify auto-generated ID
+            ResponseEntity<Map<String, String>> response = authController.login(loginRequest);
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            Map<String, String> responseBody = response.getBody();
+            assertNotNull(responseBody);
+            assertEquals("testtoken", responseBody.get("token"));
+            assertEquals("1", responseBody.get("idUtilisateur"));
+
+            verify(userRepository).findByEmail("test@example.com");
+            jwtUtilsMockedStatic.verify(() -> JwtUtils.generateToken("test@example.com", "USER"));
+        }
     }
 
     @Test
     void login_InvalidCredentials() {
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         ResponseEntity<Map<String, String>> response = authController.login(loginRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("Invalid credentials", response.getBody().get("error"));
+        verify(userRepository).findByEmail("test@example.com");
     }
 
     @Test
@@ -108,11 +142,12 @@ class AuthControllerTest {
         userWithWrongPassword.setEmail("test@example.com");
         userWithWrongPassword.setPassword(PasswordUtils.hashPassword("wrongpassword"));
 
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(userWithWrongPassword));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userWithWrongPassword));
 
         ResponseEntity<Map<String, String>> response = authController.login(loginRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
         assertEquals("Invalid credentials", response.getBody().get("error"));
+        verify(userRepository).findByEmail("test@example.com");
     }
 }

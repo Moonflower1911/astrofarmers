@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,10 +42,12 @@ class AuthServiceTest {
         testUserDto.setPassword("password123");
         testUserDto.setRole("USER");
 
-        //userRole = new Role();
-        //userRole.setNomRole("USER");
+        userRole = new Role();
+        userRole.setRoleId(1L);
+        userRole.setNomRole("USER");
 
         savedUser = new User();
+        savedUser.setUserId(1L);
         savedUser.setUsername("testuser");
         savedUser.setEmail("test@example.com");
         savedUser.setPassword(PasswordUtils.hashPassword("password123"));
@@ -57,25 +58,18 @@ class AuthServiceTest {
     void registerUser_Success() {
         when(userRepository.existsByEmail(testUserDto.getEmail())).thenReturn(false);
         when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(userRole));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-            User user = invocation.getArgument(0);
-            // Simulate auto-generated ID
-            User userWithId = new User();
-            userWithId.setUserId(1L); // Simulated auto-generated ID
-            userWithId.setUsername(user.getUsername());
-            userWithId.setEmail(user.getEmail());
-            userWithId.setPassword(user.getPassword());
-            userWithId.setRole(user.getRole());
-            return userWithId;
-        });
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         User result = authService.registerUser(testUserDto);
 
         assertNotNull(result);
-        assertNotNull(result.getUserId()); // Verify ID was generated
+        assertEquals(1L, result.getUserId());
         assertEquals("test@example.com", result.getEmail());
         assertEquals("USER", result.getRole().getNomRole());
-        verify(userRepository, times(1)).save(any(User.class));
+
+        verify(userRepository).existsByEmail(testUserDto.getEmail());
+        verify(roleRepository).findByRoleName("USER");
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
@@ -87,6 +81,23 @@ class AuthServiceTest {
         });
 
         assertEquals("Email already exists!", exception.getMessage());
+        verify(userRepository).existsByEmail(testUserDto.getEmail());
+        verify(roleRepository, never()).findByRoleName(anyString());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void registerUser_RoleNotFound_ThrowsException() {
+        when(userRepository.existsByEmail(testUserDto.getEmail())).thenReturn(false);
+        when(roleRepository.findByRoleName("USER")).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            authService.registerUser(testUserDto);
+        });
+
+        assertEquals("Role not found", exception.getMessage());
+        verify(userRepository).existsByEmail(testUserDto.getEmail());
+        verify(roleRepository).findByRoleName("USER");
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -97,6 +108,7 @@ class AuthServiceTest {
         String result = authService.loginUser("test@example.com", "password123");
 
         assertEquals("Login successful!", result);
+        verify(userRepository).findByEmail("test@example.com");
     }
 
     @Test
@@ -108,5 +120,18 @@ class AuthServiceTest {
         });
 
         assertEquals("Invalid credentials!", exception.getMessage());
+        verify(userRepository).findByEmail("test@example.com");
+    }
+
+    @Test
+    void loginUser_UserNotFound_ThrowsException() {
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            authService.loginUser("nonexistent@example.com", "password123");
+        });
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userRepository).findByEmail("nonexistent@example.com");
     }
 }
