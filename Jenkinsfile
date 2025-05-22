@@ -21,6 +21,7 @@ pipeline {
                                     sh 'nohup npm run dev > frontend.log 2>&1 &'
                                 }
                             }
+                }
             }
         }
 
