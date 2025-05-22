@@ -91,6 +91,8 @@ public class NdviController {
             command.addAll(Arrays.asList(args.split(" ")));
         }
 
+        System.out.println("📌 Running Python: " + String.join(" ", command));
+
         ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(new File(pythonScriptsDir));
         pb.redirectErrorStream(true);
@@ -99,9 +101,11 @@ public class NdviController {
         String output = new String(process.getInputStream().readAllBytes());
         int exitCode = process.waitFor();
 
+        System.out.println("📤 Python Output:\n" + output);
+
         if (exitCode != 0) {
             throw new RuntimeException(
-                    String.format("Python script failed (exit %d): %s", exitCode, output)
+                    String.format("Python script failed (exit %d): %s",scriptName, exitCode, output)
             );
         }
         return output;
