@@ -177,8 +177,10 @@ public class WeatherService {
 
 
     private List<Double> convertToDoubleList(List<?> list) {
-        return list.stream()
-                .map(item -> ((Number) item).doubleValue())
+        return list == null ? List.of() : list.stream()
+                .filter(Objects::nonNull)
+                .map(item -> ((Number) item).doubleValue())   
                 .collect(Collectors.toList());
     }
+
 }
