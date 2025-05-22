@@ -15,12 +15,12 @@ pipeline {
         stage('Run Frontend in Dev Mode') {
             steps {
                 script {
-                    // Run npm install and dev server inside Node container
-                    docker.image('node:18').inside("--network host -v ${env.WORKSPACE}/${env.FRONTEND_DIR}:/app") {
-                        sh 'npm install'
-                        sh 'nohup npm run dev > frontend.log 2>&1 &'
-                    }
-                }
+                            docker.image('node:18').inside("--network host -v ${env.WORKSPACE}/${env.FRONTEND_DIR}:/app") {
+                                dir('/app') {
+                                    sh 'npm install'
+                                    sh 'nohup npm run dev > frontend.log 2>&1 &'
+                                }
+                            }
             }
         }
 
