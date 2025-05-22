@@ -20,10 +20,9 @@ RUN apt-get update && \
 COPY --from=build /app/target/*.jar app.jar
 COPY --from=build /app/script_python /app/script_python
 
-# Setup Python environment
-RUN cd /app/script_python && \
-    python3 -m venv venv && \
-    ./venv/bin/pip install -r requirements.txt
+# Add entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
