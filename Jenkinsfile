@@ -2,104 +2,39 @@ pipeline {
     agent any
 
     environment {
-        BACKEND_DIR = 'backend'
         FRONTEND_DIR = 'frontend'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Using mounted workspace (no clone needed)'
+                checkout scm  // Properly clones the repo
             }
         }
 
-        stage('Build Backend') {
-            steps {
-                dir("${env.BACKEND_DIR}") {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }pipeline {
-             agent any
-
-             environment {
-                 BACKEND_DIR = 'backend'
-                 FRONTEND_DIR = 'frontend'
-             }
-
-             stages {
-                 stage('Clone Repository') {
-                     steps {
-                         checkout scm  // Properly clones the repo
-                     }
-                 }
-
-                 stage('Build Backend') {
-                     steps {
-                         dir("${env.BACKEND_DIR}") {
-                             sh 'mvn clean package -DskipTests'
-                         }
-                     }
-                 }
-
-                 stage('Build Frontend') {
-                     steps {
-                         dir("${env.FRONTEND_DIR}") {
-                             sh 'npm install'
-                             sh 'nohup npm run dev > frontend.log 2>&1 &'
-                         }
-                     }
-                 }
-
-                 stage('Build & Deploy with Docker Compose') {
-                     steps {
-                         sh 'docker compose down || true'
-                         sh 'docker compose build --no-cache'
-                         sh 'docker compose up -d'
-                     }
-                 }
-             }
-
-             post {
-                 success {
-                     echo '✅ Deployment successful!'
-                     sh 'docker ps'  // Verify running containers
-                 }
-                 failure {
-                     echo '❌ Deployment failed!'
-                 }
-             }
-         }
-
-        stage('Build Frontend') {
+        stage('Run Frontend in Dev Mode') {
             steps {
                 dir("${env.FRONTEND_DIR}") {
                     sh 'npm install'
-                    sh 'npm run dev'
+                    sh 'nohup npm run dev > frontend.log 2>&1 &'  // Run in background
                 }
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Start Backend & Database') {
             steps {
-                sh 'docker compose build'
-            }
-        }
-
-        stage('Restart Services') {
-            steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d'
+                sh 'docker compose up -d backend postgres'  // Only start required services
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment completed successfully.'
+            echo '✅ Frontend running in dev mode! Access at http://localhost:3000'
+            echo '✅ Backend running at http://localhost:8080'
         }
         failure {
-            echo 'Build or deployment failed.'
+            echo '❌ Deployment failed! Check logs.'
         }
     }
 }
