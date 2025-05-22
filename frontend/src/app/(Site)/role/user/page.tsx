@@ -572,9 +572,9 @@ const UserPage = () => {
                                                 })}`
                                             }
                                             formatter={(value: number, rawName: string | number) => {
-                                                const name = String(rawName) as keyof typeof units;
+                                                const name = String(rawName);
 
-                                                const units = {
+                                                const units: Record<string, string> = {
                                                     temperatureMax: '°C',
                                                     temperatureMin: '°C',
                                                     precipitation: 'mm',
@@ -583,7 +583,7 @@ const UserPage = () => {
                                                     cloudCover: '%',
                                                 };
 
-                                                const labels = {
+                                                const labels: Record<string, string> = {
                                                     temperatureMax: 'Max Temp',
                                                     temperatureMin: 'Min Temp',
                                                     precipitation: 'Precipitation',
@@ -592,11 +592,9 @@ const UserPage = () => {
                                                     cloudCover: 'Cloud Cover',
                                                 };
 
-                                                const unit = units[name] ?? '';
-                                                const label = labels[name] ?? name;
-
-                                                return [`${value} ${unit}`, label];
+                                                return [`${value} ${units[name] ?? ''}`, labels[name] ?? name];
                                             }}
+
                                         />
                                         <Line
                                             type="monotone"
