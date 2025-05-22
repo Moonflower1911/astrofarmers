@@ -1,5 +1,4 @@
 'use client';
-'use client';
 
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
@@ -12,13 +11,8 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 // ✅ Fix for missing marker icons in Next.js
 // @ts-ignore
-delete L.Icon.Default.prototype._getIconUrl;
 
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: markerIcon2x.src,
-    iconUrl: markerIcon.src,
-    shadowUrl: markerShadow.src,
-});
+
 
 interface Land {
     id: number;
@@ -31,6 +25,17 @@ export default function LandList() {
     const [lands, setLands] = useState<Land[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        // @ts-ignore
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: markerIcon2x.src,
+            iconUrl: markerIcon.src,
+            shadowUrl: markerShadow.src,
+        });
+    }, []);
+
 
     useEffect(() => {
         const fetchLands = async () => {

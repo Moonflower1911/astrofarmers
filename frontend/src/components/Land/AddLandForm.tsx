@@ -1,22 +1,27 @@
 'use client';
 
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L, { LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // Fix for default marker icon
-delete (L.Icon.Default as any).prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-});
+
 
 export default function AddLandForm() {
     const [name, setName] = useState("");
     const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
     const [message, setMessage] = useState<string | null>(null);
+
+
+    useEffect(() => {
+        // ✅ Safe in browser
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+            iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+            shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+        });
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,6 +29,7 @@ export default function AddLandForm() {
             setMessage("❌ Please choose a location on the map.");
             return;
         }
+        if (typeof window === 'undefined') return;
 
         const userId = localStorage.getItem("idUtilisateur");
         const token = localStorage.getItem("token");

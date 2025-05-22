@@ -1,8 +1,12 @@
 'use client';
 import { useState } from "react";
 import UserLayout from "@/components/Layouts/UserLayout";
-import NDVIMap from "@/components/NDVI/NDVIMap";
 import NDVIResults from "@/components/NDVI/NDVIResults";
+import dynamic from 'next/dynamic';
+
+const NDVIMap = dynamic(() => import('@/components/NDVI/NDVIMap'), {
+    ssr: false,
+});
 
 export default function NDVIAnalysisPage() {
     const [activeTab, setActiveTab] = useState<"map" | "results">("map");

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from "react";
-import AddLandForm from "@/components/Land/AddLandForm";
 import DefaultLayout from "@/components/Layouts/UserLayout";
-import LandList from "@/components/Land/LandList";
+import dynamic from 'next/dynamic';
+const AddLandForm = dynamic(() => import('@/components/Land/AddLandForm'), { ssr: false });
+const LandList = dynamic(() => import('@/components/Land/LandList'), { ssr: false });
+
 
 export default function AddLandPage() {
     const [view, setView] = useState<"add" | "see">("add");
