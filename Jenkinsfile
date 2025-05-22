@@ -28,6 +28,19 @@ pipeline {
             }
         }
 
+        stage('Run Frontend Tests') {
+            steps {
+                script {
+                    docker.image('node:18-alpine').inside {
+                        dir("${env.FRONTEND_DIR}") {
+                            sh 'npm install'
+                            sh 'npm test'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 script {
