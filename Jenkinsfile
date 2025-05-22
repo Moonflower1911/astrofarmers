@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Adjust if your directory names are different in Jenkins workspace
         BACKEND_DIR = 'backend'
         FRONTEND_DIR = 'frontend'
+        DOCKER_COMPOSE_FILE = 'docker-compose.app.yml'
     }
 
     stages {
@@ -17,32 +17,31 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 echo 'Building backend and frontend Docker images...'
-                // Use docker-compose to build images according to your docker-compose.yml
-                sh 'docker-compose build'
+                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} build"
             }
         }
 
         stage('Start Services') {
             steps {
-                echo 'Starting all services (Postgres, Backend, Frontend, Jenkins)...'
-                sh 'docker-compose up -d'
+                echo 'Starting Postgres, Backend, and Frontend services...'
+                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d"
             }
         }
 
         stage('Run Backend Tests (Optional)') {
             steps {
-                echo 'You can add test execution steps here if needed.'
-                // For example, run backend tests in the container if needed
+                echo 'Running backend tests inside container (optional)...'
+                // Uncomment and customize this if you have tests to run inside backend container
                 // sh "docker exec backend mvn test"
             }
         }
 
-        stage('Wait and Check') {
+        stage('Wait and Health Check') {
             steps {
                 echo 'Waiting for services to start...'
-                // Wait a few seconds to let services stabilize
                 sh 'sleep 15'
-                // You can add health check scripts here if needed
+                // Add health checks if you want, for example:
+                // sh "curl --fail http://localhost:8080/actuator/health"
             }
         }
     }
@@ -56,6 +55,8 @@ pipeline {
         }
         always {
             echo 'Pipeline finished.'
+            // Optional cleanup if you want to stop containers after pipeline ends
+            // sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
         }
     }
 }
