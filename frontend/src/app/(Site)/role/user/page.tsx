@@ -571,24 +571,31 @@ const UserPage = () => {
                                                     day: 'numeric'
                                                 })}`
                                             }
-                                            formatter={(value, name) => {
-                                                const labels = {
-                                                    temperatureMax: 'Max Temp',
-                                                    temperatureMin: 'Min Temp',
-                                                    precipitation: 'Precipitation',
-                                                    radiation: 'Radiation',
-                                                    windSpeed: 'Wind Speed',
-                                                    cloudCover: 'Cloud Cover'
-                                                };
+                                            formatter={(value: number, rawName: string | number) => {
+                                                const name = String(rawName) as keyof typeof units;
+
                                                 const units = {
                                                     temperatureMax: '°C',
                                                     temperatureMin: '°C',
                                                     precipitation: 'mm',
                                                     radiation: 'W/m²',
                                                     windSpeed: 'km/h',
-                                                    cloudCover: '%'
+                                                    cloudCover: '%',
                                                 };
-                                                return [`${value} ${units[name]}`, labels[name]];
+
+                                                const labels = {
+                                                    temperatureMax: 'Max Temp',
+                                                    temperatureMin: 'Min Temp',
+                                                    precipitation: 'Precipitation',
+                                                    radiation: 'Radiation',
+                                                    windSpeed: 'Wind Speed',
+                                                    cloudCover: 'Cloud Cover',
+                                                };
+
+                                                const unit = units[name] ?? '';
+                                                const label = labels[name] ?? name;
+
+                                                return [`${value} ${unit}`, label];
                                             }}
                                         />
                                         <Line
