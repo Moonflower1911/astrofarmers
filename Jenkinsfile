@@ -15,6 +15,19 @@ pipeline {
             }
         }
 
+        // New stage added for backend auth tests
+        stage('Run Backend Auth Tests') {
+            steps {
+                script {
+                    docker.image('maven:3.9.4-eclipse-temurin-17').inside {
+                        dir("${env.BACKEND_DIR}") {
+                            sh 'mvn test -Dtest=AuthServiceTest,AuthControllerTest'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 script {
