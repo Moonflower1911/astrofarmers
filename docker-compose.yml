@@ -61,6 +61,7 @@ services:
       - ./:/var/jenkins_home/workspace
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
+    command: bash -c "curl -fsSL https://get.docker.com | sh && /usr/local/bin/jenkins.sh"
     networks:
       - app-network
 
