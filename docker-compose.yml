@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
-    container_name: postgres
+    container_name: postgres-ci
     restart: always
     environment:
       POSTGRES_USER: agri_user
@@ -18,7 +18,7 @@ services:
 
   backend:
     build: ./backend
-    container_name: backend
+    container_name: backend-ci
     ports:
       - "8080:8080"
     environment:
@@ -34,7 +34,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: frontend
+    container_name: frontend-ci
     ports:
       - "3000:3000"
     environment:
