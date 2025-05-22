@@ -1,15 +1,22 @@
-# Simple Dockerfile for dev mode
-FROM node:18-alpine
+# Install dependencies and build app
+FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN npm run build
 
-ENV NODE_ENV=development
+# Production image
+FROM node:18-alpine
+WORKDIR /app
+
+# Copy only built output and minimal runtime files
+COPY --from=builder /app /app
+
+ENV NODE_ENV=production
 ENV NEXT_PUBLIC_API_URL=http://backend:8080
 
 EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
