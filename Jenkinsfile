@@ -8,22 +8,25 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                checkout scm  // Properly clones the repo
+                checkout scm
             }
         }
 
         stage('Run Frontend in Dev Mode') {
             steps {
-                dir("${env.FRONTEND_DIR}") {
-                    sh 'npm install'
-                    sh 'nohup npm run dev > frontend.log 2>&1 &'  // Run in background
+                script {
+                    // Run npm install and dev server inside Node container
+                    docker.image('node:18').inside("--network host -v ${env.WORKSPACE}/${env.FRONTEND_DIR}:/app") {
+                        sh 'npm install'
+                        sh 'nohup npm run dev > frontend.log 2>&1 &'
+                    }
                 }
             }
         }
 
         stage('Start Backend & Database') {
             steps {
-                sh 'docker compose up -d backend postgres'  // Only start required services
+                sh 'docker compose up -d backend postgres'
             }
         }
     }
