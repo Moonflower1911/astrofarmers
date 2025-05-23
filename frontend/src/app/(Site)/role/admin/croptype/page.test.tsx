@@ -5,9 +5,11 @@ import CropPage from './page';
 
 // Mock the AdminLayout component to simplify testing
 jest.mock('@/components/Layouts/AdminLayout', () => {
-  return ({ children }: { children: React.ReactNode }) => (
+  const MockAdminLayout = ({ children }: { children: React.ReactNode }) => (
     <div data-testid="admin-layout">{children}</div>
   );
+  MockAdminLayout.displayName = 'AdminLayout'; // Add this line
+  return MockAdminLayout;
 });
 
 // Mock any hooks that might be causing issues
