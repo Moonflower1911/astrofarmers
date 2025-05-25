@@ -68,7 +68,7 @@ const SchedulesPage = () => {
                 }
 
                 // Fetch lands
-                const landsResponse = await fetch(`http://localhost:8080/api/lands/user/${userId}`, {
+                const landsResponse = await fetch(`/api/lands/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -85,7 +85,7 @@ const SchedulesPage = () => {
                 }
 
                 // Fetch crop types
-                const cropTypesResponse = await fetch(`http://localhost:8080/api/admin/crops`, {
+                const cropTypesResponse = await fetch(`/api/admin/crops`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -114,7 +114,7 @@ const SchedulesPage = () => {
 
     const fetchIrrigationEvents = async (userId: string, token: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/irrigationEvents/user/${userId}`, {
+            const response = await fetch(`/api/irrigationEvents/user/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -143,7 +143,7 @@ const SchedulesPage = () => {
                 throw new Error('Authentication required');
             }
 
-            const response = await fetch(`http://localhost:8080/api/irrigationEvents/${eventId}/done`, {
+            const response = await fetch(`/api/irrigationEvents/${eventId}/done`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -188,7 +188,7 @@ const SchedulesPage = () => {
                 longitude: String(selectedLand.longitude)
             }).toString();
 
-            const response = await fetch(`http://localhost:8080/api/user/irrigation/${userId}/schedule?${queryParams}`, {
+            const response = await fetch(`/api/user/irrigation/${userId}/schedule?${queryParams}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -5,7 +5,7 @@ export async function POST(request: Request) {
     const { latitude, longitude } = await request.json();
 
     // 1. Appel à l'API Spring Boot existante
-    const springBootResponse = await fetch('http://localhost:8080/ndvi/from-coords', {
+    const springBootResponse = await fetch(`/ndvi/from-coords`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ latitude, longitude }),

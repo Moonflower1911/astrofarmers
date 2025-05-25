@@ -51,7 +51,7 @@ const DropdownNotification = () => {
         throw new Error('Authentication required');
       }
 
-      const response = await fetch(`http://localhost:8080/api/irrigationEvents/user/${userId}`, {
+      const response = await fetch(`/api/irrigationEvents/user/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -98,7 +98,7 @@ const DropdownNotification = () => {
         throw new Error('Authentication required');
       }
 
-      const response = await fetch(`http://localhost:8080/api/irrigationEvents/${eventId}/done`, {
+      const response = await fetch(`/api/irrigationEvents/${eventId}/done`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

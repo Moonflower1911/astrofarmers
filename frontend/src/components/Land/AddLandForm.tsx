@@ -40,7 +40,7 @@ export default function AddLandForm() {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/lands/add?userId=${userId}`, {
+            const response = await fetch(`/api/lands/add?userId=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

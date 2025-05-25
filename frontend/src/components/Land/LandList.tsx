@@ -50,7 +50,7 @@ export default function LandList() {
             }
 
             try {
-                const response = await fetch(`http://localhost:8080/api/lands/user/${userId}`, {
+                const response = await fetch(`/api/lands/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

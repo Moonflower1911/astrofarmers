@@ -24,7 +24,19 @@ const nextConfig = {
         port: ""
       }
     ]
-  }
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",             // for things like /api/auth/register
+        destination: "http://backend:8080/api/:path*",
+      },
+      {
+        source: "/ndvi/:path*",            // for things like /ndvi/from-coords
+        destination: "http://backend:8080/ndvi/:path*",
+      }
+    ];
+  },
 };
 
 export default nextConfig;

@@ -19,7 +19,7 @@ export default function NDVIAnalysisPage() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8080/ndvi/from-coords', {
+            const response = await fetch(`/ndvi/from-coords`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

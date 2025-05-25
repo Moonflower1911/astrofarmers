@@ -25,7 +25,7 @@ export default function UserProfileForm() {
             }
 
             try {
-                const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+                const response = await fetch(`/api/users/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -53,7 +53,7 @@ export default function UserProfileForm() {
         if (!user || !token) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${user.userId}`, {
+            const response = await fetch(`/api/users/${user.userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

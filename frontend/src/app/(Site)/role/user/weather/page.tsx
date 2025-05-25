@@ -103,7 +103,7 @@ const UserPage = () => {
 
                 if (!token || !userId) throw new Error("Authentication required");
 
-                const res = await fetch(`http://localhost:8080/api/lands/user/${userId}`, {
+                const res = await fetch(`/api/lands/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -129,7 +129,7 @@ const UserPage = () => {
 
     useEffect(() => {
         if (!selectedLand) return;
-        fetch(`http://localhost:8080/api/weather/daily?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
+        fetch(`/api/weather/daily?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data) && data.length > 0) setDaily(data[0]);
@@ -139,7 +139,7 @@ const UserPage = () => {
 
     useEffect(() => {
         if (!selectedLand) return;
-        fetch(`http://localhost:8080/api/weather/forecast?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
+        fetch(`/api/weather/forecast?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
             .then((res) => res.json())
             .then((data) => setForecasts(data))
             .catch((err) => console.error("Failed to fetch forecast", err));
@@ -147,7 +147,7 @@ const UserPage = () => {
 
     useEffect(() => {
         if (!selectedLand) return;
-        fetch(`http://localhost:8080/api/alerts?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
+        fetch(`/api/alerts?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}`)
             .then((res) => res.json())
             .then((data) => setAlerts(data))
             .catch((err) => console.error("Failed to fetch alerts", err));
@@ -179,7 +179,7 @@ const UserPage = () => {
 
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
             const dateStr = d.toISOString().split("T")[0];
-            const url = `http://localhost:8080/api/weather/historical?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}&date=${dateStr}`;
+            const url = `/api/weather/historical?lat=${selectedLand.latitude}&lon=${selectedLand.longitude}&date=${dateStr}`;
 
             promises.push(fetch(url).then((res) => res.json()));
         }

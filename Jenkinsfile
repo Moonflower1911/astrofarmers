@@ -78,6 +78,19 @@ pipeline {
                 sh 'docker-compose up -d'
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                    sh 'kubectl apply -f k8s/postgres.yaml -n astrofarmers'
+                    sh 'kubectl apply -f k8s/backend-config.yaml -n astrofarmers'
+                    sh 'kubectl apply -f k8s/db-credentials.yaml -n astrofarmers'
+                    sh 'kubectl apply -f k8s/backend.yaml -n astrofarmers'
+                    sh 'kubectl apply -f k8s/frontend.yaml -n astrofarmers'
+                }
+            }
+        }
+
     }
 
     post {

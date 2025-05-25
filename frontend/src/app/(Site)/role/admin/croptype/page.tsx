@@ -62,7 +62,7 @@ const CropPage = () => {
 
     const fetchCrops = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/admin/crops', {
+            const response = await fetch(`/api/admin/crops`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -94,7 +94,7 @@ const CropPage = () => {
         if (!window.confirm('Are you sure you want to delete this crop?')) return;
 
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/crops/${id}`, {
+            const response = await fetch(`/api/admin/crops/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -131,7 +131,7 @@ const CropPage = () => {
                 moistureThresholds: editingCrop.moistureThresholds
             };
 
-            const response = await fetch(`http://localhost:8080/api/admin/crops/${editingCrop.id}`, {
+            const response = await fetch(`/api/admin/crops/${editingCrop.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ const CropPage = () => {
                 moistureThresholds: newCrop.moistureThresholds || {}
             };
 
-            const response = await fetch('http://localhost:8080/api/admin/crops', {
+            const response = await fetch(`/api/admin/crops`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

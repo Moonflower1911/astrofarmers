@@ -90,7 +90,7 @@ const IrrigationPage = () => {
                     throw new Error('Authentication required');
                 }
 
-                const response = await fetch(`http://localhost:8080/api/lands/user/${userId}`, {
+                const response = await fetch(`/api/lands/user/${userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -142,7 +142,7 @@ const IrrigationPage = () => {
                 }
 
                 const soilResponse = await fetch(
-                    `http://localhost:8080/api/soilMoisture?${soilParams}`,
+                    `/api/soilMoisture?${soilParams}`,
                     { headers }
                 );
 
@@ -188,7 +188,7 @@ const IrrigationPage = () => {
             }
 
             const generalResponse = await fetch(
-                `http://localhost:8080/api/soilMoisture/general?${generalParams}`,
+                `/api/soilMoisture/general?${generalParams}`,
                 { headers }
             );
 
