@@ -75,6 +75,7 @@ pipeline {
         stage('Push to Docker Hub') {
           steps {
             withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+              sh 'docker logout'
               sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
 
               sh 'docker tag astro-backend meryem1911/astro-backend:latest'
