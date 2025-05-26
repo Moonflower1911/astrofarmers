@@ -247,6 +247,11 @@ INSERT INTO role (role_id, role_name) VALUES
 *Add CropType.*
 
 ---
+## 🖼️ Demo Video
+
+https://drive.google.com/file/d/1XC0C1RbA0o-ANMPzqxR8y99-HOm_dUJo/view
+
+---
 
 ## 📁 Project Structure (Simplified Version)
 
