@@ -68,6 +68,7 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
+                sh 'docker logout || true'
                 sh 'docker-compose build'
             }
         }
