@@ -72,6 +72,21 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+          steps {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+              sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+              sh 'docker tag astro-backend meryem1911/astro-backend:latest'
+              sh 'docker push meryem1911/astro-backend:latest'
+
+              sh 'docker tag astro-frontend meryem1911/astro-frontend:latest'
+              sh 'docker push meryem1911/astro-frontend:latest'
+            }
+          }
+        }
+
+
         stage('Restart Services') {
             steps {
                 sh 'docker-compose down || true'
@@ -82,6 +97,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 withKubeConfig([credentialsId: 'kubeconfig']) {
+                    sh 'kubectl get nodes'
                     sh 'kubectl apply -f k8s/postgres.yaml -n astrofarmers'
                     sh 'kubectl apply -f k8s/backend-config.yaml -n astrofarmers'
                     sh 'kubectl apply -f k8s/db-credentials.yaml -n astrofarmers'
