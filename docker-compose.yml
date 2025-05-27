@@ -45,32 +45,8 @@ services:
     networks:
       - app-network
 
-  jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile.jenkins
-    container_name: jenkins
-    user: root
-    ports:
-      - "8081:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /c/Users/ASUS/.minikube:/root/.minikube:ro
-      - /c/Users/ASUS/.kube:/root/.kube:ro
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - app-network
-
-
 volumes:
   pgdata:
-  jenkins_home:
 
 
 networks:
