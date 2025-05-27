@@ -15,8 +15,8 @@ RUN curl -SL https://github.com/docker/compose/releases/download/v2.24.5/docker-
     -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose
 
-# Install kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+# Install kubectl (v1.33.1 or latest stable)
+RUN curl -LO --http1.1 https://dl.k8s.io/release/v1.33.1/bin/linux/amd64/kubectl \
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 # Verify installations
