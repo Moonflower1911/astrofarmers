@@ -5,7 +5,8 @@
 AstroFarmers is a web-based platform designed to support agricultural monitoring by visualizing satellite-derived weather data, crop health indicators (like NDVI), and soil moisture information. The system empowers farmers, researchers, and agricultural professionals by offering a clear, accessible view of environmental and agronomic conditions using remote sensing technologies.
 
 ---
-
+DevOps configuration, CI/CD pipelines, and infrastructure-related scripts are available in the `devops` branch.
+---
 ## 🎯 Objectives
 
 * Enable farmers to monitor crop health using NDVI imagery and satellite observations.
